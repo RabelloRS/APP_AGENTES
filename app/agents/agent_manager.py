@@ -41,10 +41,16 @@ class AgentManager:
                 "role": "Coordenador de equipe",
                 "goal": "Coordenar tarefas entre diferentes agentes",
                 "backstory": "Coordenador experiente em gerenciamento de projetos e equipes"
-            }
+            },
+            "excel_analyst": {
+                "name": "Analista de Excel",
+                "role": "Especialista em planilhas",
+                "goal": "Analisar dados de planilhas Excel",
+                "backstory": "Profissional focado em manipulação e comparação de planilhas",
+            },
         }
     
-    def create_agent(self, agent_type: str, **kwargs) -> Optional[Agent]:
+    def create_agent(self, agent_type: str, tools: Optional[list] = None, **kwargs) -> Optional[Agent]:
         """Cria um novo agente do tipo especificado"""
         if agent_type not in self.available_agents:
             return None
@@ -57,6 +63,7 @@ class AgentManager:
                 role=agent_config["role"],
                 goal=agent_config["goal"],
                 backstory=agent_config["backstory"],
+                tools=tools,
                 verbose=True,
                 allow_delegation=False
             )
