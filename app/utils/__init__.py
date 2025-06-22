@@ -1,3 +1,3 @@
 """
 Módulo de utilitários
-""" 
+"""

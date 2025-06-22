@@ -1,0 +1,69 @@
+read_excel_column:
+  name: Ler Coluna Excel
+  description: Lê uma coluna específica de um arquivo Excel e retorna os dados como
+    lista
+  category: Excel
+  parameters:
+    file_path: Caminho do arquivo Excel
+    column_name: Nome da coluna a ser lida
+  returns: Lista com os dados da coluna
+  example: read_excel_column('dados.xlsx', 'Material')
+read_excel_file:
+  name: Ler Arquivo Excel
+  description: Lê um arquivo Excel completo e retorna informações estruturadas sobre
+    sua estrutura
+  category: Excel
+  parameters:
+    file_path: Caminho do arquivo Excel
+  returns: Dicionário com informações do arquivo (colunas, linhas, tipos de dados,
+    etc.)
+  example: read_excel_file('dados.xlsx')
+compare_text_similarity:
+  name: Comparar Similaridade de Texto
+  description: Compara a similaridade entre duas listas de textos usando algoritmos
+    fuzzy matching
+  category: Análise
+  parameters:
+    list1: Primeira lista de textos
+    list2: Segunda lista de textos
+  returns: Dicionário com correspondências e scores de similaridade
+  example: compare_text_similarity(['cimento', 'areia'], ['cimento portland', 'areia
+    média'])
+analyze_excel_similarity:
+  name: Análise de Similaridade Excel
+  description: Realiza análise completa de similaridade entre duas planilhas Excel
+  category: Excel
+  parameters:
+    file1_path: Caminho do primeiro arquivo Excel
+    file2_path: Caminho do segundo arquivo Excel
+    column1: Nome da coluna no primeiro arquivo
+    column2: Nome da coluna no segundo arquivo
+  returns: Análise completa com estatísticas e recomendações
+  example: analyze_excel_similarity('orcamento1.xlsx', 'orcamento2.xlsx', 'Material',
+    'Descrição')
+detect_data_patterns:
+  name: Detectar Padrões nos Dados
+  description: Analisa uma coluna de dados e detecta padrões, tipos de dados e características
+  category: Análise
+  parameters:
+    file_path: Caminho do arquivo Excel
+    column_name: Nome da coluna a ser analisada
+  returns: Dicionário com padrões detectados nos dados
+  example: detect_data_patterns('dados.xlsx', 'Preço')
+generate_excel_report:
+  name: Gerar Relatório Excel
+  description: Gera um relatório estruturado baseado nos resultados de análise
+  category: Relatórios
+  parameters:
+    analysis_results: Resultados da análise (dicionário)
+  returns: Relatório formatado em texto
+  example: generate_excel_report(resultados_analise)
+validate_excel_file:
+  name: Validar Arquivo Excel
+  description: Valida um arquivo Excel e retorna informações sobre sua estrutura e
+    qualidade
+  category: Excel
+  parameters:
+    file_path: Caminho do arquivo Excel
+  returns: Dicionário com informações de validação
+  example: validate_excel_file('dados.xlsx')

@@ -1,4 +1,13 @@
-# 🚀 Instruções de Uso - APP_AGENTES
+# 🚀 Instruções de Uso - Agentes de Engenharia da Propor
+
+## 📞 Informações da Empresa
+
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
 ## ✅ Setup Concluído!
 
@@ -6,7 +15,7 @@ O projeto foi configurado com sucesso! Aqui está o que foi criado:
 
 ### 📁 Estrutura do Projeto
 ```
-APP_AGENTES/
+Agentes de Engenharia da Propor/
 ├── app/                    # Aplicação principal
 │   ├── main.py            # Interface Streamlit
 │   ├── agents/            # Gerenciador de agentes
@@ -58,9 +67,69 @@ A aplicação será aberta automaticamente em: **http://localhost:8501**
 ### 🎯 Funcionalidades Disponíveis
 
 1. **Dashboard**: Visão geral do sistema
-2. **Agentes**: Gerenciar agentes especializados
-3. **Crews**: Criar e gerenciar equipes de agentes
-4. **Execução**: Executar tarefas com as crews
+2. **Agentes**: Gerenciar e editar agentes especializados
+3. **Tarefas**: Visualizar e gerenciar tarefas disponíveis
+4. **Tools**: Gerenciar ferramentas e atribuí-las aos agentes
+5. **Crews**: Criar e gerenciar equipes de agentes
+6. **Execução**: Executar tarefas com as crews
+
+### ✏️ Editando Agentes
+
+A aba **Agentes** permite editar completamente as configurações dos agentes:
+
+#### Como Editar um Agente:
+1. Clique na aba **"Agentes"**
+2. Expanda o agente desejado
+3. Clique em **"✏️ Editar [Nome do Agente]"**
+4. Modifique os campos:
+   - **Nome do Agente**: Nome exibido na interface
+   - **Função**: Papel do agente no sistema
+   - **Objetivo**: Meta principal do agente
+   - **História**: Background e contexto do agente
+   - **Opções Avançadas**: Verbose e delegação
+5. Clique em **"💾 Salvar Alterações"**
+
+#### Recursos de Edição:
+- ✅ **Salvamento Automático**: Alterações são salvas no arquivo YAML
+- ✅ **Backup Automático**: Arquivo original é preservado
+- ✅ **Validação**: Campos obrigatórios são verificados
+- ✅ **Recriação**: Botão para aplicar mudanças a agentes existentes
+- ✅ **Visualização**: Ver configuração atual e backup
+
+#### Importante:
+- Alterações no nome podem afetar crews existentes
+- Use **"🔄 Recriar"** para aplicar mudanças a agentes já criados
+- O arquivo de backup está disponível em `app/config/agents.yaml.backup`
+
+### 🔧 Gerenciando Tools (Ferramentas)
+
+A aba **Tools** permite gerenciar e atribuir ferramentas aos agentes:
+
+#### Como Configurar Tools para um Agente:
+1. Clique na aba **"Tools"**
+2. Na seção "Agentes e suas Tools", clique em **"⚙️ Configurar Tools"**
+3. Selecione as ferramentas desejadas para o agente
+4. Clique em **"💾 Salvar Configuração"**
+5. Use **"🔄 Recriar Agente"** para aplicar as mudanças
+
+#### Categorias de Tools Disponíveis:
+- **📁 Excel**: Ferramentas para manipulação de planilhas
+  - Ler Coluna Excel
+  - Ler Arquivo Excel
+  - Análise de Similaridade Excel
+  - Validar Arquivo Excel
+- **📁 Análise**: Ferramentas para análise de dados
+  - Comparar Similaridade de Texto
+  - Detectar Padrões nos Dados
+- **📁 Relatórios**: Ferramentas para geração de relatórios
+  - Gerar Relatório Excel
+
+#### Recursos de Tools:
+- ✅ **Atribuição Flexível**: Cada agente pode ter tools específicas
+- ✅ **Descrições Detalhadas**: Informações completas sobre cada ferramenta
+- ✅ **Exemplos de Uso**: Código de exemplo para cada tool
+- ✅ **Persistência**: Configurações salvas automaticamente
+- ✅ **Categorização**: Tools organizadas por categoria
 
 ### 🔍 Testando o Sistema
 

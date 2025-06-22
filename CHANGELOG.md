@@ -1,4 +1,13 @@
-# Changelog - Refatoração para YAML
+# Changelog - Agentes de Engenharia da Propor
+
+## 📞 Informações da Empresa
+
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
 ## 🚀 Versão 2.0.0 - Arquitetura com YAML
 

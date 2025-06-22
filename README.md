@@ -1,6 +1,17 @@
-# APP_AGENTES - Sistema de Agentes Inteligentes
+# Agentes de Engenharia da Propor - Sistema de Agentes Inteligentes
 
 Um sistema de agentes inteligentes construído com CrewAI e Streamlit para criar, gerenciar e executar tarefas complexas através de múltiplos agentes especializados.
+
+**Desenvolvido pela Propor Engenharia**
+
+## 📞 Informações da Empresa
+
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
 ## 🚀 Características
 
@@ -20,8 +31,7 @@ Um sistema de agentes inteligentes construído com CrewAI e Streamlit para criar
 
 ### 1. Clone o repositório
 ```bash
-git clone <seu-repositorio-github>
-cd APP_AGENTES
+cd Agentes_de_Engenharia_da_Propor
 ```
 
 ### 2. Crie e ative o ambiente virtual
@@ -69,7 +79,7 @@ black .
 ## 📁 Estrutura do Projeto
 
 ```
-APP_AGENTES/
+Agentes_de_Engenharia_da_Propor/
 ├── app/                    # Aplicação principal
 │   ├── main.py            # Entry point do Streamlit
 │   ├── agents/            # Definições dos agentes

@@ -1,4 +1,13 @@
-# Resumo Executivo - APP_AGENTES
+# Resumo Executivo - Agentes de Engenharia da Propor
+
+## 📞 Informações da Empresa
+
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
 ## 📊 Status Atual do Projeto
 
@@ -128,7 +137,7 @@
 
 ## 📋 **Conclusão**
 
-O projeto **APP_AGENTES** está em um estado **excelente** com **80% de funcionalidade** implementada e funcionando. O sistema core está completo e operacional, oferecendo valor imediato para usuários.
+O projeto **Agentes de Engenharia da Propor** está em um estado **excelente** com **80% de funcionalidade** implementada e funcionando. O sistema core está completo e operacional, oferecendo valor imediato para usuários.
 
 ### **Pontos Fortes**
 - ✅ Arquitetura sólida e escalável

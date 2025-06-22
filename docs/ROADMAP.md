@@ -1,8 +1,17 @@
-# Roadmap de Desenvolvimento - APP_AGENTES
+# Roadmap de Desenvolvimento - Agentes de Engenharia da Propor
+
+## 📞 Informações da Empresa
+
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
 ## 🎯 Visão Geral
 
-Este documento define o roadmap de desenvolvimento para o projeto APP_AGENTES, organizando as funcionalidades pendentes em fases de prioridade e cronograma estimado.
+Este documento define o roadmap de desenvolvimento para o projeto Agentes de Engenharia da Propor, organizando as funcionalidades pendentes em fases de prioridade e cronograma estimado.
 
 ## 📅 Cronograma Geral
 

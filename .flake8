@@ -1,0 +1,47 @@
+[flake8]
+# Configuração do Flake8 para o projeto Agentes de Engenharia da Propor
+
+# Códigos de erro a ignorar
+ignore = 
+    # E501 - Linha muito longa (deixar o black formatar)
+    E501,
+    # W503 - Quebra de linha antes do operador (incompatível com black)
+    W503,
+    # E203 - Espaços em branco antes de ':' (incompatível com black)
+    E203,
+    # W291 - Espaços em branco no final da linha (black remove automaticamente)
+    W291,
+    # W292 - Sem quebra de linha no final do arquivo (black adiciona automaticamente)
+    W292,
+    # F401 - Imports não utilizados (autoflake remove)
+    F401,
+    # F841 - Variáveis locais não utilizadas (autoflake remove)
+    F841
+
+# Comprimento máximo da linha
+max-line-length = 88
+
+# Diretórios a ignorar
+exclude = 
+    venv/,
+    .venv/,
+    __pycache__/,
+    .git/,
+    .pytest_cache/,
+    build/,
+    dist/,
+    *.egg-info/,
+    .env,
+    .env.local
+
+# Arquivos a ignorar
+per-file-ignores = 
+    # Ignorar warnings de escape sequences em arquivos de documentação
+    *.md:W605,
+    # Ignorar imports não utilizados em arquivos __init__.py
+    __init__.py:F401
+
+# Configurações adicionais
+max-complexity = 10
+statistics = True
+count = True 

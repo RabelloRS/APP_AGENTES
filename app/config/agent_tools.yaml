@@ -1,0 +1,35 @@
+researcher:
+  tools:
+  - read_excel_file
+  - compare_text_similarity
+  - detect_data_patterns
+  description: Tools para pesquisa e análise de dados
+analyst:
+  tools:
+  - analyze_excel_similarity
+  - detect_data_patterns
+  - generate_excel_report
+  description: Tools para análise avançada e geração de relatórios
+writer:
+  tools:
+  - generate_excel_report
+  description: Tools para geração de conteúdo e relatórios
+reviewer:
+  tools:
+  - validate_excel_file
+  - detect_data_patterns
+  description: Tools para validação e revisão de dados
+coordinator:
+  tools:
+  - read_excel_file
+  - validate_excel_file
+  description: Tools básicas para coordenação
+excel_analyst:
+  tools:
+  - read_excel_column
+  - read_excel_file
+  - analyze_excel_similarity
+  - detect_data_patterns
+  - generate_excel_report
+  - validate_excel_file
+  description: Todas as tools relacionadas a análise de Excel

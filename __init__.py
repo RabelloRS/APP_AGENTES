@@ -9,3 +9,6 @@ CREA-RS: 167.175-D | CNPJ: 41.556.670/0001-76
 __version__ = "2.0.0"
 __author__ = "Propor Engenharia"
 __email__ = "contato@propor.com.br"
+
+# Este arquivo torna o diretório raiz um pacote Python
+# Permite que imports como 'from app.agents.agent_manager import AgentManager' funcionem

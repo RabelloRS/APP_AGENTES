@@ -1,8 +1,17 @@
-# 🎯 INSTRUÇÕES DO MVP - APP_AGENTES
+# 🎯 INSTRUÇÕES DO MVP - Agentes de Engenharia da Propor
+
+## 📞 Informações da Empresa
+
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
 ## 📋 Visão Geral do MVP
 
-O **MVP (Produto Mínimo Viável)** do APP_AGENTES é um sistema de **análise e comparação de planilhas Excel** especificamente desenvolvido para aplicações em **engenharia civil**.
+O **MVP (Produto Mínimo Viável)** do Agentes de Engenharia da Propor é um sistema de **análise e comparação de planilhas Excel** especificamente desenvolvido para aplicações em **engenharia civil**.
 
 ### 🎯 Objetivo Principal
 Comparar automaticamente duas planilhas Excel e identificar:

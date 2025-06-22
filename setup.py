@@ -1,11 +1,12 @@
 """
-Script de setup para o APP_AGENTES
+Script de setup para o Agentes de Engenharia da Propor
 """
 
 import os
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
+
 
 def check_python_version():
     """Verifica se a versão do Python é compatível"""
@@ -16,12 +17,13 @@ def check_python_version():
     print(f"✅ Python {sys.version.split()[0]} detectado")
     return True
 
+
 def create_virtual_environment():
     """Cria o ambiente virtual"""
     if os.path.exists("venv"):
         print("✅ Ambiente virtual já existe")
         return True
-    
+
     print("🔧 Criando ambiente virtual...")
     try:
         subprocess.run([sys.executable, "-m", "venv", "venv"], check=True)
@@ -31,16 +33,17 @@ def create_virtual_environment():
         print("❌ Erro ao criar ambiente virtual")
         return False
 
+
 def install_dependencies():
     """Instala as dependências"""
     print("📦 Instalando dependências...")
-    
+
     # Determinar o comando pip correto
-    if os.name == 'nt':  # Windows
+    if os.name == "nt":  # Windows
         pip_cmd = os.path.join("venv", "Scripts", "pip")
     else:  # Unix/Linux/Mac
         pip_cmd = os.path.join("venv", "bin", "pip")
-    
+
     try:
         subprocess.run([pip_cmd, "install", "-r", "requirements.txt"], check=True)
         print("✅ Dependências instaladas com sucesso")
@@ -49,12 +52,13 @@ def install_dependencies():
         print("❌ Erro ao instalar dependências")
         return False
 
+
 def create_env_file():
     """Cria o arquivo .env se não existir"""
     if os.path.exists(".env"):
         print("✅ Arquivo .env já existe")
         return True
-    
+
     if os.path.exists("env_template.txt"):
         try:
             shutil.copy("env_template.txt", ".env")
@@ -68,41 +72,48 @@ def create_env_file():
         print("❌ Template env_template.txt não encontrado")
         return False
 
+
 def main():
     """Função principal do setup"""
-    print("🚀 Setup do APP_AGENTES")
-    print("=" * 50)
-    
+    print("🚀 Setup do Agentes de Engenharia da Propor")
+    print("=" * 60)
+    print("📞 Propor Engenharia")
+    print("👨‍💼 Responsável Técnico: Eng. Civil Rodrigo Emanuel Rabello")
+    print("🏢 CREA-RS: 167.175-D | CNPJ: 41.556.670/0001-76")
+    print("📱 51 99164-6794 | Nova Petrópolis / RS")
+    print("=" * 60)
+
     # Verificar versão do Python
     if not check_python_version():
         return False
-    
+
     # Criar ambiente virtual
     if not create_virtual_environment():
         return False
-    
+
     # Instalar dependências
     if not install_dependencies():
         return False
-    
+
     # Criar arquivo .env
     if not create_env_file():
         return False
-    
-    print("\n" + "=" * 50)
+
+    print("\n" + "=" * 60)
     print("✅ Setup concluído com sucesso!")
     print("\n📋 Próximos passos:")
     print("1. Configure suas chaves de API no arquivo .env")
     print("2. Ative o ambiente virtual:")
-    if os.name == 'nt':  # Windows
-        print("   venv\\Scripts\\activate")
+    if os.name == "nt":  # Windows
+        print(r"   venv\Scripts\activate")
     else:  # Unix/Linux/Mac
         print("   source venv/bin/activate")
     print("3. Execute a aplicação:")
     print("   streamlit run app/main.py")
-    
+
     return True
+
 
 if __name__ == "__main__":
     success = main()
-    sys.exit(0 if success else 1) 
+    sys.exit(0 if success else 1)

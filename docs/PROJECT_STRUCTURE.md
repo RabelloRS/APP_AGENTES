@@ -1,15 +1,22 @@
-# Estrutura Completa do Projeto APP_AGENTES
+# Estrutura Completa do Projeto - Agentes de Engenharia da Propor
 
-## 📋 Visão Geral do Projeto
+## 📞 Informações da Empresa
 
-**APP_AGENTES** é um sistema de agentes inteligentes baseado em CrewAI que permite criar, gerenciar e executar equipes de agentes especializados para diferentes tarefas. O sistema utiliza arquivos YAML para configuração, oferece interface web via Streamlit e segue as melhores práticas de desenvolvimento.
+**Propor Engenharia**  
+**Responsável Técnico:** Eng. Civil Rodrigo Emanuel Rabello  
+**CREA-RS:** 167.175-D  
+**Telefone:** 51 99164-6794  
+**Localização:** Nova Petrópolis / RS  
+**CNPJ:** 41.556.670/0001-76
 
-## 🏗️ Arquitetura do Sistema
+## 🎯 Visão Geral
 
-### Estrutura de Diretórios Completa
+**Agentes de Engenharia da Propor** é um sistema de agentes inteligentes baseado em CrewAI que permite criar, gerenciar e executar equipes de agentes especializados para diferentes tarefas. O sistema utiliza arquivos YAML para configuração e oferece uma interface web moderna através do Streamlit.
+
+## 📁 Estrutura Completa do Projeto
 
 ```
-APP_AGENTES/
+Agentes_de_Engenharia_da_Propor/
 ├── 📁 app/                          # Módulo principal da aplicação
 │   ├── 📁 agents/                   # Gerenciamento de agentes
 │   │   ├── __init__.py
