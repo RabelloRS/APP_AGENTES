@@ -1,39 +1,130 @@
-research_task:
-  description: "Realizar pesquisa detalhada sobre {topic}"
-  expected_output: "Relatório completo com informações coletadas, fontes e dados relevantes"
-  agent: "researcher"
-  context: ["Pesquisa inicial para coleta de informações"]
+# TAREFAS ESPECIALIZADAS EM ENGENHARIA CIVIL
+# Tarefas para agentes multidisciplinares
 
-analysis_task:
-  description: "Analisar dados coletados sobre {topic} e gerar insights"
-  expected_output: "Análise estruturada com insights, tendências e recomendações"
-  agent: "analyst"
+# === TAREFAS DE PESQUISA E ANÁLISE ===
+technical_research_task:
+  description: "Realizar pesquisa técnica detalhada sobre {topic} incluindo normas, patentes e artigos científicos"
+  expected_output: "Relatório técnico completo com informações coletadas, fontes confiáveis e dados relevantes para engenharia civil"
+  agent: "technical_researcher"
+  context: ["Pesquisa inicial para coleta de informações técnicas"]
+
+data_analysis_task:
+  description: "Analisar dados quantitativos e qualitativos sobre {topic} e gerar insights acionáveis"
+  expected_output: "Análise estruturada com insights, tendências, estatísticas e recomendações baseadas em dados"
+  agent: "data_analyst"
   context: ["Análise dos dados pesquisados"]
 
-writing_task:
-  description: "Criar conteúdo baseado na pesquisa e análise sobre {topic}"
-  expected_output: "Conteúdo bem estruturado, claro e informativo"
-  agent: "writer"
-  context: ["Criação de conteúdo baseado em dados"]
+# === TAREFAS DE PROJETO ESTRUTURAL ===
+structural_analysis_task:
+  description: "Realizar análise estrutural e dimensionamento para {topic}"
+  expected_output: "Cálculos estruturais, dimensionamento de elementos e verificação de segurança estrutural"
+  agent: "structural_engineer"
+  context: ["Análise estrutural do projeto"]
 
-review_task:
-  description: "Revisar e validar o conteúdo criado sobre {topic}"
-  expected_output: "Conteúdo revisado e validado com sugestões de melhoria"
-  agent: "reviewer"
-  context: ["Revisão de qualidade do conteúdo"]
+geotechnical_analysis_task:
+  description: "Analisar condições geotécnicas e projetar fundações para {topic}"
+  expected_output: "Análise de solo, projeto de fundações e recomendações geotécnicas"
+  agent: "geotechnical_engineer"
+  context: ["Análise geotécnica do projeto"]
 
-coordination_task:
-  description: "Coordenar o fluxo de trabalho entre os agentes para {topic}"
-  expected_output: "Plano de execução coordenado e cronograma de entregas"
-  agent: "coordinator"
-  context: ["Coordenação geral do projeto"]
+hydraulic_design_task:
+  description: "Projetar sistemas hidráulicos e de drenagem para {topic}"
+  expected_output: "Dimensionamento de redes hidráulicas, sistemas de drenagem e estruturas hidráulicas"
+  agent: "hydraulic_engineer"
+  context: ["Projeto hidráulico"]
 
-excel_analysis_task:
-  description: "Analisar dados de planilhas Excel relacionadas a {topic}"
-  expected_output: "Relatório de análise de dados com comparações e insights"
-  agent: "excel_analyst"
-  context: ["Análise específica de dados em planilhas"]
+# === TAREFAS DE PLANEJAMENTO E GESTÃO ===
+construction_planning_task:
+  description: "Desenvolver cronograma detalhado e sequenciamento de atividades para {topic}"
+  expected_output: "Cronograma Gantt, sequenciamento otimizado de atividades e análise de cenários"
+  agent: "construction_planner"
+  context: ["Planejamento da construção"]
 
+cost_analysis_task:
+  description: "Elaborar orçamento detalhado e análise de custos para {topic}"
+  expected_output: "Orçamento completo, análise de composições de custos e controle financeiro"
+  agent: "cost_engineer"
+  context: ["Análise de custos"]
+
+procurement_planning_task:
+  description: "Planejar processos de compras e gestão de fornecedores para {topic}"
+  expected_output: "Plano de compras, gestão de fornecedores e controle de contratos"
+  agent: "procurement_specialist"
+  context: ["Planejamento de compras"]
+
+# === TAREFAS DE QUALIDADE E SEGURANÇA ===
+quality_planning_task:
+  description: "Desenvolver plano de qualidade e controle para {topic}"
+  expected_output: "Plano de qualidade, checklists e sistema de rastreabilidade de materiais"
+  agent: "quality_engineer"
+  context: ["Controle de qualidade"]
+
+safety_planning_task:
+  description: "Elaborar plano de segurança e análise de riscos para {topic}"
+  expected_output: "Plano de segurança, análise de riscos e verificação de conformidade com normas"
+  agent: "safety_engineer"
+  context: ["Segurança do trabalho"]
+
+# === TAREFAS AMBIENTAIS ===
+environmental_assessment_task:
+  description: "Avaliar impactos ambientais e desenvolver medidas mitigadoras para {topic}"
+  expected_output: "Avaliação de impacto ambiental, medidas mitigadoras e acompanhamento de licenciamento"
+  agent: "environmental_engineer"
+  context: ["Avaliação ambiental"]
+
+sustainability_planning_task:
+  description: "Desenvolver estratégias de sustentabilidade e certificações verdes para {topic}"
+  expected_output: "Estratégias de sustentabilidade, análise de eficiência energética e guia de certificações"
+  agent: "sustainability_expert"
+  context: ["Sustentabilidade"]
+
+# === TAREFAS DE TECNOLOGIA ===
+bim_coordination_task:
+  description: "Coordenar modelos BIM e detectar interferências para {topic}"
+  expected_output: "Coordenação de modelos multidisciplinares, detecção de conflitos e extração de quantitativos"
+  agent: "bim_specialist"
+  context: ["Coordenação BIM"]
+
+innovation_research_task:
+  description: "Pesquisar e avaliar tecnologias inovadoras para {topic}"
+  expected_output: "Análise de tecnologias, cálculo de ROI e planejamento de projetos-piloto"
+  agent: "innovation_expert"
+  context: ["Pesquisa de inovações"]
+
+# === TAREFAS DE COMUNICAÇÃO ===
+technical_documentation_task:
+  description: "Criar documentação técnica clara e precisa para {topic}"
+  expected_output: "Documentação técnica, relatórios e especificações bem estruturados"
+  agent: "technical_writer"
+  context: ["Documentação técnica"]
+
+stakeholder_communication_task:
+  description: "Gerenciar comunicação com stakeholders e criar apresentações para {topic}"
+  expected_output: "Apresentações técnicas, análise de stakeholders e relatórios de feedback"
+  agent: "communication_expert"
+  context: ["Comunicação com stakeholders"]
+
+# === TAREFAS DE REVISÃO ===
+technical_review_task:
+  description: "Revisar e validar documentos e cálculos técnicos para {topic}"
+  expected_output: "Revisão técnica completa, verificação de conformidade normativa e validação de cálculos"
+  agent: "technical_reviewer"
+  context: ["Revisão técnica"]
+
+legal_review_task:
+  description: "Analisar aspectos jurídicos e regulatórios para {topic}"
+  expected_output: "Análise legal, revisão de contratos e avaliação de riscos jurídicos"
+  agent: "legal_expert"
+  context: ["Revisão legal"]
+
+# === TAREFAS DE COORDENAÇÃO ===
+technical_coordination_task:
+  description: "Coordenar equipe multidisciplinar e resolver conflitos técnicos para {topic}"
+  expected_output: "Coordenação eficiente entre agentes, resolução de conflitos e acompanhamento de progresso"
+  agent: "technical_coordinator"
+  context: ["Coordenação técnica"]
+
+# === TAREFAS DE MONITORAMENTO ===
 whatsapp_monitoring_task:
   description: "Monitorar grupo do WhatsApp '{group_name}' em busca de mensagens com arquivos e links de serviços em nuvem"
   expected_output: "Lista de mensagens encontradas com arquivos e links identificados, incluindo timestamps"
@@ -50,4 +141,49 @@ file_organization_task:
   description: "Organizar arquivos baixados, adicionar timestamps aos nomes e criar estrutura de pastas organizada"
   expected_output: "Arquivos organizados com nomes padronizados incluindo data e hora, estrutura de pastas criada"
   agent: "file_organizer"
-  context: ["Organização e padronização de arquivos"] 
+  context: ["Organização e padronização de arquivos"]
+
+# === TAREFAS ESPECÍFICAS POR TIPO DE PROJETO ===
+bridge_design_task:
+  description: "Desenvolver projeto completo de ponte para {location} considerando aspectos estruturais, geotécnicos e hidráulicos"
+  expected_output: "Projeto integrado de ponte com análises multidisciplinares e documentação técnica completa"
+  agent: "technical_coordinator"
+  context: ["Projeto de ponte multidisciplinar"]
+
+building_design_task:
+  description: "Desenvolver projeto completo de edifício para {location} considerando estrutura, instalações e sustentabilidade"
+  expected_output: "Projeto integrado de edifício com análises estruturais, hidráulicas e ambientais"
+  agent: "technical_coordinator"
+  context: ["Projeto de edifício multidisciplinar"]
+
+infrastructure_planning_task:
+  description: "Planejar infraestrutura urbana para {location} considerando aspectos técnicos, ambientais e sociais"
+  expected_output: "Plano de infraestrutura integrado com análises técnicas, ambientais e de viabilidade"
+  agent: "technical_coordinator"
+  context: ["Planejamento de infraestrutura"]
+
+# === TAREFAS DE ANÁLISE DE VIABILIDADE ===
+feasibility_study_task:
+  description: "Realizar estudo de viabilidade técnica, econômica e ambiental para {topic}"
+  expected_output: "Estudo de viabilidade completo com análises técnica, econômica, ambiental e de riscos"
+  agent: "technical_coordinator"
+  context: ["Estudo de viabilidade"]
+
+risk_assessment_task:
+  description: "Avaliar riscos técnicos, financeiros e operacionais para {topic}"
+  expected_output: "Análise de riscos detalhada com identificação, avaliação e medidas de mitigação"
+  agent: "technical_coordinator"
+  context: ["Avaliação de riscos"]
+
+# === TAREFAS DE OTIMIZAÇÃO ===
+process_optimization_task:
+  description: "Otimizar processos construtivos e logísticos para {topic}"
+  expected_output: "Proposta de otimização de processos com análise de custos, prazos e qualidade"
+  agent: "technical_coordinator"
+  context: ["Otimização de processos"]
+
+resource_optimization_task:
+  description: "Otimizar alocação de recursos humanos, materiais e equipamentos para {topic}"
+  expected_output: "Plano de otimização de recursos com cronograma e análise de custos"
+  agent: "technical_coordinator"
+  context: ["Otimização de recursos"] 

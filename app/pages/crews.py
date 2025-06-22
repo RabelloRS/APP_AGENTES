@@ -113,53 +113,64 @@ def show_crews_tab():
     
     # Seleção de agentes com interface melhorada
     st.markdown("### 🤖 Seleção de Agentes")
-    st.info("💡 **Dica**: Selecione os agentes na ordem que devem trabalhar. O primeiro agente inicia o processo e passa informações para o próximo.")
+    st.info("💡 **Dica**: Selecione os agentes na ordem que devem trabalhar. Cada agente executará automaticamente sua tarefa específica.")
     
     available_agents = agent_manager.list_available_agent_types()
     
-    # Mostrar agentes disponíveis com descrições
-    selected_agents = []
+    # Criar lista de agentes com nomes amigáveis para seleção
+    agent_options = []
+    agent_type_mapping = {}
     
-    for i, agent_type in enumerate(available_agents):
+    for agent_type in available_agents:
         friendly_name = agent_friendly_names.get(agent_type, agent_type)
         description = agent_descriptions.get(agent_type, "Agente especializado")
         
-        # Obter ferramentas do agente
-        agent_tools = agent_manager.get_agent_tools(agent_type)
-        tools_text = ", ".join(agent_tools) if agent_tools else "Nenhuma ferramenta"
-        
-        with st.expander(f"{friendly_name} ({agent_type})", expanded=False):
-            st.markdown(f"**Descrição:** {description}")
-            st.markdown(f"**Ferramentas:** {tools_text}")
-            
-            if st.checkbox(f"Adicionar {friendly_name} à crew", key=f"agent_{i}"):
-                selected_agents.append(agent_type)
+        # Criar opção com nome amigável e descrição
+        option_text = f"{friendly_name} - {description}"
+        agent_options.append(option_text)
+        agent_type_mapping[option_text] = agent_type
     
-    # Mostrar ordem dos agentes selecionados
+    # Usar multiselect para manter ordem de seleção
+    selected_agent_options = st.multiselect(
+        "Selecione os agentes na ordem desejada:",
+        options=agent_options,
+        help="Clique nos agentes na ordem que devem trabalhar. A ordem de seleção será mantida."
+    )
+    
+    # Converter de volta para agent_types na ordem selecionada
+    selected_agents = [agent_type_mapping[option] for option in selected_agent_options]
+    
+    # Mapeamento automático de agentes para tarefas
+    agent_to_task_mapping = {
+        "researcher": "research_task",
+        "analyst": "analysis_task", 
+        "writer": "writing_task",
+        "reviewer": "review_task",
+        "coordinator": "coordination_task",
+        "excel_analyst": "excel_analysis_task",
+        "whatsapp_monitor": "whatsapp_monitoring_task",
+        "file_downloader": "file_download_task",
+        "file_organizer": "file_organization_task"
+    }
+    
+    # Gerar tarefas automaticamente baseadas nos agentes
+    selected_tasks = [agent_to_task_mapping.get(agent_type, "research_task") for agent_type in selected_agents]
+    
+    # Mostrar ordem dos agentes e suas tarefas
     if selected_agents:
-        st.markdown("### 📋 Ordem dos Agentes na Crew")
-        st.info("Esta é a ordem em que os agentes trabalharão:")
+        st.markdown("### 📋 Fluxo de Trabalho da Crew")
+        st.info("Esta é a sequência de trabalho que será executada:")
         
-        for i, agent_type in enumerate(selected_agents, 1):
+        for i, (agent_type, task_type) in enumerate(zip(selected_agents, selected_tasks), 1):
             friendly_name = agent_friendly_names.get(agent_type, agent_type)
-            st.markdown(f"{i}. {friendly_name}")
-    
-    # Seleção de tarefas
-    st.markdown("### 📝 Seleção de Tarefas")
-    st.info("💡 **Dica**: As tarefas serão executadas na ordem dos agentes. Cada agente executa sua tarefa específica.")
-    
-    available_tasks = task_manager.list_available_task_types()
-    selected_tasks = []
-    
-    for i, task_type in enumerate(available_tasks):
-        friendly_name = task_friendly_names.get(task_type, task_type)
-        description = task_descriptions.get(task_type, "Tarefa especializada")
-        
-        with st.expander(f"{friendly_name} ({task_type})", expanded=False):
-            st.markdown(f"**Descrição:** {description}")
+            task_name = task_friendly_names.get(task_type, task_type)
+            st.markdown(f"{i}. **{friendly_name}** → {task_name}")
             
-            if st.checkbox(f"Incluir tarefa {friendly_name}", key=f"task_{i}"):
-                selected_tasks.append(task_type)
+            # Mostrar ferramentas do agente
+            agent_tools = agent_manager.get_agent_tools(agent_type)
+            if agent_tools:
+                tools_text = ", ".join(agent_tools)
+                st.markdown(f"   🛠️ **Ferramentas:** {tools_text}")
     
     # Botão de criação
     if st.button("🚀 Criar Crew", type="primary", use_container_width=True):
@@ -167,16 +178,11 @@ def show_crews_tab():
             st.error("Por favor, forneça um nome para a crew.")
         elif not selected_agents:
             st.error("Por favor, selecione pelo menos um agente.")
-        elif not selected_tasks:
-            st.error("Por favor, selecione pelo menos uma tarefa.")
-        elif len(selected_agents) != len(selected_tasks):
-            st.warning("⚠️ **Atenção**: O número de agentes e tarefas deve ser igual. Cada agente executa uma tarefa específica.")
-            st.info(f"Agentes selecionados: {len(selected_agents)} | Tarefas selecionadas: {len(selected_tasks)}")
         else:
             try:
                 st.info(f"🔄 Criando crew '{crew_name}' com {len(selected_agents)} agentes...")
                 
-                # Criar a crew
+                # Criar a crew com a ordem exata selecionada
                 crew = crew_manager.create_crew_with_tasks(
                     crew_name, selected_agents, selected_tasks, crew_description
                 )
@@ -188,7 +194,7 @@ def show_crews_tab():
                     with st.expander("📋 Resumo da Crew Criada", expanded=True):
                         st.markdown(f"**Nome:** {crew_name}")
                         st.markdown(f"**Descrição:** {crew_description}")
-                        st.markdown("**Agentes e Tarefas:**")
+                        st.markdown("**Fluxo de Trabalho:**")
                         
                         for i, (agent_type, task_type) in enumerate(zip(selected_agents, selected_tasks), 1):
                             agent_name = agent_friendly_names.get(agent_type, agent_type)

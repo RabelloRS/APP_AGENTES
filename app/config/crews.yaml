@@ -51,4 +51,272 @@ full_crew:
   agents: ["researcher", "analyst", "writer", "reviewer", "coordinator"]
   tasks: ["research_task", "analysis_task", "writing_task", "review_task", "coordination_task"]
   verbose: true
-  memory: true 
+  memory: true
+
+# EQUIPES ESPECIALIZADAS EM ENGENHARIA CIVIL
+# Templates de equipes multidisciplinares para diferentes tipos de projetos
+
+# === EQUIPE PARA PROJETOS DE PONTES ===
+bridge_design_crew:
+  name: Equipe de Projeto de Pontes
+  description: Equipe multidisciplinar especializada em projetos de pontes e viadutos
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - structural_engineer
+    - geotechnical_engineer
+    - hydraulic_engineer
+    - construction_planner
+    - cost_engineer
+    - quality_engineer
+    - safety_engineer
+    - environmental_engineer
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Pesquisa → Análises Técnicas → Planejamento → Custos → Qualidade/Segurança → Ambiental → Documentação → Revisão"
+  use_cases:
+    - "Projetos de pontes rodoviárias"
+    - "Viadutos urbanos"
+    - "Pontes ferroviárias"
+    - "Passarelas"
+
+# === EQUIPE PARA PROJETOS DE EDIFÍCIOS ===
+building_design_crew:
+  name: Equipe de Projeto de Edifícios
+  description: Equipe multidisciplinar especializada em projetos de edifícios residenciais e comerciais
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - structural_engineer
+    - geotechnical_engineer
+    - hydraulic_engineer
+    - construction_planner
+    - cost_engineer
+    - quality_engineer
+    - safety_engineer
+    - sustainability_expert
+    - bim_specialist
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Pesquisa → Análises Técnicas → Planejamento → Custos → Qualidade/Segurança → Sustentabilidade → BIM → Documentação → Revisão"
+  use_cases:
+    - "Edifícios residenciais"
+    - "Edifícios comerciais"
+    - "Hospitais e escolas"
+    - "Centros comerciais"
+
+# === EQUIPE PARA INFRAESTRUTURA URBANA ===
+infrastructure_crew:
+  name: Equipe de Infraestrutura Urbana
+  description: Equipe multidisciplinar especializada em projetos de infraestrutura urbana
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - hydraulic_engineer
+    - geotechnical_engineer
+    - construction_planner
+    - cost_engineer
+    - environmental_engineer
+    - procurement_specialist
+    - communication_expert
+    - legal_expert
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Pesquisa → Projeto Hidráulico → Geotécnica → Planejamento → Custos → Ambiental → Compras → Comunicação → Legal → Documentação → Revisão"
+  use_cases:
+    - "Sistemas de drenagem urbana"
+    - "Redes de água e esgoto"
+    - "Pavimentação urbana"
+    - "Iluminação pública"
+
+# === EQUIPE PARA ESTUDOS DE VIABILIDADE ===
+feasibility_study_crew:
+  name: Equipe de Estudos de Viabilidade
+  description: Equipe especializada em estudos de viabilidade técnica, econômica e ambiental
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - data_analyst
+    - cost_engineer
+    - environmental_engineer
+    - legal_expert
+    - communication_expert
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Pesquisa → Análise de Dados → Custos → Ambiental → Legal → Comunicação → Documentação → Revisão"
+  use_cases:
+    - "Estudos de viabilidade técnica"
+    - "Análises econômicas"
+    - "Avaliações ambientais"
+    - "Análises de riscos"
+
+# === EQUIPE PARA OTIMIZAÇÃO DE PROCESSOS ===
+process_optimization_crew:
+  name: Equipe de Otimização de Processos
+  description: Equipe especializada em otimização de processos construtivos e logísticos
+  agents:
+    - technical_coordinator
+    - data_analyst
+    - construction_planner
+    - cost_engineer
+    - procurement_specialist
+    - innovation_expert
+    - quality_engineer
+    - safety_engineer
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Análise de Dados → Planejamento → Custos → Compras → Inovação → Qualidade/Segurança → Documentação → Revisão"
+  use_cases:
+    - "Otimização de cronogramas"
+    - "Redução de custos"
+    - "Melhoria de produtividade"
+    - "Implementação de novas tecnologias"
+
+# === EQUIPE PARA PROJETOS SUSTENTÁVEIS ===
+sustainable_design_crew:
+  name: Equipe de Projeto Sustentável
+  description: Equipe especializada em projetos com foco em sustentabilidade e eficiência energética
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - sustainability_expert
+    - environmental_engineer
+    - structural_engineer
+    - hydraulic_engineer
+    - bim_specialist
+    - innovation_expert
+    - cost_engineer
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Pesquisa → Sustentabilidade → Ambiental → Projetos Técnicos → BIM → Inovação → Custos → Documentação → Revisão"
+  use_cases:
+    - "Edifícios verdes"
+    - "Certificações LEED/AQUA"
+    - "Projetos com eficiência energética"
+    - "Construção sustentável"
+
+# === EQUIPE PARA PROJETOS DE INOVAÇÃO ===
+innovation_crew:
+  name: Equipe de Inovação Tecnológica
+  description: Equipe especializada em implementação de tecnologias inovadoras na construção
+  agents:
+    - technical_coordinator
+    - innovation_expert
+    - bim_specialist
+    - data_analyst
+    - technical_researcher
+    - cost_engineer
+    - procurement_specialist
+    - communication_expert
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Inovação → BIM → Análise de Dados → Pesquisa → Custos → Compras → Comunicação → Documentação → Revisão"
+  use_cases:
+    - "Implementação de BIM"
+    - "Automação de processos"
+    - "IoT na construção"
+    - "Projetos-piloto de novas tecnologias"
+
+# === EQUIPE PARA GESTÃO DE QUALIDADE ===
+quality_management_crew:
+  name: Equipe de Gestão de Qualidade
+  description: Equipe especializada em controle de qualidade e gestão de processos
+  agents:
+    - technical_coordinator
+    - quality_engineer
+    - safety_engineer
+    - data_analyst
+    - procurement_specialist
+    - technical_writer
+    - technical_reviewer
+    - legal_expert
+  workflow: "Coordenação → Qualidade → Segurança → Análise de Dados → Compras → Documentação → Revisão → Legal"
+  use_cases:
+    - "Implementação de sistemas de qualidade"
+    - "Auditorias de qualidade"
+    - "Gestão de fornecedores"
+    - "Conformidade normativa"
+
+# === EQUIPE PARA COMUNICAÇÃO E STAKEHOLDERS ===
+stakeholder_communication_crew:
+  name: Equipe de Comunicação e Stakeholders
+  description: Equipe especializada em comunicação com stakeholders e gestão de expectativas
+  agents:
+    - technical_coordinator
+    - communication_expert
+    - technical_writer
+    - data_analyst
+    - legal_expert
+    - technical_reviewer
+  workflow: "Coordenação → Comunicação → Documentação → Análise de Dados → Legal → Revisão"
+  use_cases:
+    - "Gestão de stakeholders"
+    - "Apresentações técnicas"
+    - "Relatórios executivos"
+    - "Comunicação de crise"
+
+# === EQUIPE PARA MONITORAMENTO E AUTOMAÇÃO ===
+monitoring_automation_crew:
+  name: Equipe de Monitoramento e Automação
+  description: Equipe especializada em monitoramento de processos e automação de tarefas
+  agents:
+    - technical_coordinator
+    - whatsapp_monitor
+    - file_downloader
+    - file_organizer
+    - data_analyst
+    - innovation_expert
+    - technical_writer
+  workflow: "Coordenação → Monitoramento → Download → Organização → Análise → Inovação → Documentação"
+  use_cases:
+    - "Monitoramento de grupos de trabalho"
+    - "Automação de downloads"
+    - "Organização de arquivos"
+    - "Análise de dados coletados"
+
+# === EQUIPE MÍNIMA PARA PROJETOS SIMPLES ===
+simple_project_crew:
+  name: Equipe Mínima para Projetos Simples
+  description: Equipe reduzida para projetos de baixa complexidade
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - technical_writer
+    - technical_reviewer
+  workflow: "Coordenação → Pesquisa → Documentação → Revisão"
+  use_cases:
+    - "Projetos simples"
+    - "Consultorias técnicas"
+    - "Relatórios básicos"
+    - "Análises preliminares"
+
+# === EQUIPE COMPLETA PARA PROJETOS COMPLEXOS ===
+complex_project_crew:
+  name: Equipe Completa para Projetos Complexos
+  description: Equipe completa para projetos de alta complexidade e grande porte
+  agents:
+    - technical_coordinator
+    - technical_researcher
+    - data_analyst
+    - structural_engineer
+    - geotechnical_engineer
+    - hydraulic_engineer
+    - construction_planner
+    - cost_engineer
+    - procurement_specialist
+    - quality_engineer
+    - safety_engineer
+    - environmental_engineer
+    - sustainability_expert
+    - bim_specialist
+    - innovation_expert
+    - technical_writer
+    - communication_expert
+    - technical_reviewer
+    - legal_expert
+  workflow: "Coordenação → Pesquisa → Análise → Projetos Técnicos → Planejamento → Custos → Compras → Qualidade/Segurança → Ambiental → Sustentabilidade → BIM → Inovação → Documentação → Comunicação → Revisão → Legal"
+  use_cases:
+    - "Projetos de grande porte"
+    - "Infraestrutura complexa"
+    - "Projetos multidisciplinares"
+    - "Mega projetos" 

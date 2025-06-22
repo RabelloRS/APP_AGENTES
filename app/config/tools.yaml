@@ -1,72 +1,686 @@
-read_excel_column:
-  name: Ler Coluna Excel
-  description: Lê uma coluna específica de um arquivo Excel e retorna os dados como
-    lista
-  category: Excel
+# FERRAMENTAS ESPECIALIZADAS EM ENGENHARIA CIVIL
+# Ferramentas para agentes multidisciplinares
+
+# === FERRAMENTAS DE PESQUISA E ANÁLISE ===
+web_search:
+  name: Busca na Web
+  description: Realiza buscas na internet para encontrar informações técnicas, normas e artigos científicos
+  category: Pesquisa
   parameters:
-    file_path: Caminho do arquivo Excel
-    column_name: Nome da coluna a ser lida
-  returns: Lista com os dados da coluna
-  example: read_excel_column('dados.xlsx', 'Material')
+    query: Termo de busca
+    max_results: Número máximo de resultados
+  returns: Lista de resultados com links e resumos
+  example: web_search("NBR 6118 concreto armado", 10)
+
+pdf_reader:
+  name: Leitor de PDF
+  description: Extrai e analisa conteúdo de arquivos PDF de normas técnicas e documentos
+  category: Pesquisa
+  parameters:
+    file_path: Caminho do arquivo PDF
+    pages: Páginas específicas (opcional)
+  returns: Texto extraído e informações estruturadas
+  example: pdf_reader("norma_abnt.pdf", "1-10")
+
+patent_search:
+  name: Busca de Patentes
+  description: Consulta bancos de dados de patentes para encontrar inovações tecnológicas
+  category: Pesquisa
+  parameters:
+    keywords: Palavras-chave para busca
+    date_range: Período de busca
+  returns: Lista de patentes relevantes
+  example: patent_search("concreto sustentável", "2020-2024")
+
+news_monitor:
+  name: Monitor de Notícias
+  description: Monitora notícias e inovações no setor da construção civil
+  category: Pesquisa
+  parameters:
+    topics: Tópicos de interesse
+    sources: Fontes de notícias
+  returns: Notícias recentes e relevantes
+  example: news_monitor("tecnologia construção", ["engenharia360", "revista_obra"])
+
+# === FERRAMENTAS DE ANÁLISE DE DADOS ===
+excel_parser:
+  name: Analisador de Excel
+  description: Lê, analisa e extrai dados de planilhas Excel e CSV
+  category: Análise
+  parameters:
+    file_path: Caminho do arquivo
+    sheet_name: Nome da planilha
+    columns: Colunas específicas
+  returns: Dados estruturados e estatísticas
+  example: excel_parser("orcamento.xlsx", "Planilha1", ["Material", "Preço"])
+
+data_visualization:
+  name: Visualização de Dados
+  description: Cria gráficos e dashboards para visualização de dados de projetos
+  category: Análise
+  parameters:
+    data: Dados para visualização
+    chart_type: Tipo de gráfico
+    title: Título do gráfico
+  returns: Gráfico ou dashboard
+  example: data_visualization(dados_custos, "bar", "Análise de Custos")
+
+statistical_analysis:
+  name: Análise Estatística
+  description: Realiza análises estatísticas complexas em dados de engenharia
+  category: Análise
+  parameters:
+    data: Dados para análise
+    analysis_type: Tipo de análise
+  returns: Resultados estatísticos
+  example: statistical_analysis(dados_produtividade, "regression")
+
+database_query:
+  name: Consulta de Banco de Dados
+  description: Executa consultas em bancos de dados de projetos
+  category: Análise
+  parameters:
+    query: Consulta SQL
+    database: Nome do banco
+  returns: Resultados da consulta
+  example: database_query("SELECT * FROM projetos WHERE status='ativo'", "projetos_db")
+
+# === FERRAMENTAS DE PROJETO ESTRUTURAL ===
+structural_calculation:
+  name: Cálculo Estrutural
+  description: Realiza cálculos estruturais básicos (momentos, esforços, deformações)
+  category: Estrutural
+  parameters:
+    element_type: Tipo de elemento
+    loads: Cargas aplicadas
+    dimensions: Dimensões
+  returns: Resultados dos cálculos
+  example: structural_calculation("viga", {"permanente": 20, "variável": 15}, {"h": 0.6, "b": 0.2})
+
+load_analysis:
+  name: Análise de Cargas
+  description: Analisa cargas permanentes, variáveis, vento e sísmicas
+  category: Estrutural
+  parameters:
+    structure_type: Tipo de estrutura
+    location: Localização
+    height: Altura
+  returns: Cargas calculadas
+  example: load_analysis("edifício", "São Paulo", 30)
+
+normative_check:
+  name: Verificação Normativa
+  description: Verifica conformidade com normas de projeto estrutural
+  category: Estrutural
+  parameters:
+    element: Elemento estrutural
+    calculations: Resultados dos cálculos
+    norm: Norma aplicável
+  returns: Verificação de conformidade
+  example: normative_check("laje", resultados_calculo, "NBR 6118")
+
+# === FERRAMENTAS GEOTÉCNICAS ===
+soil_analysis:
+  name: Análise de Solo
+  description: Analisa dados de sondagens (SPT, CPT) e caracteriza o solo
+  category: Geotécnica
+  parameters:
+    spt_data: Dados de SPT
+    soil_type: Tipo de solo
+    depth: Profundidade
+  returns: Características do solo
+  example: soil_analysis(spt_values, "argila", 5.0)
+
+foundation_design:
+  name: Projeto de Fundação
+  description: Dimensiona fundações rasas e profundas
+  category: Geotécnica
+  parameters:
+    load: Carga aplicada
+    soil_capacity: Capacidade do solo
+    foundation_type: Tipo de fundação
+  returns: Dimensionamento da fundação
+  example: foundation_design(500, 200, "sapata")
+
+slope_stability:
+  name: Análise de Estabilidade de Taludes
+  description: Analisa estabilidade de taludes e contenções
+  category: Geotécnica
+  parameters:
+    slope_geometry: Geometria do talude
+    soil_properties: Propriedades do solo
+    water_level: Nível d'água
+  returns: Fator de segurança
+  example: slope_stability({"height": 10, "angle": 30}, soil_data, 2.0)
+
+# === FERRAMENTAS HIDRÁULICAS ===
+flow_simulation:
+  name: Simulação de Escoamento
+  description: Simula escoamento em tubulações e canais
+  category: Hidráulica
+  parameters:
+    pipe_diameter: Diâmetro da tubulação
+    flow_rate: Vazão
+    roughness: Rugosidade
+  returns: Perda de carga e velocidade
+  example: flow_simulation(0.3, 0.05, 0.001)
+
+network_design:
+  name: Projeto de Rede
+  description: Dimensiona redes de água e esgoto
+  category: Hidráulica
+  parameters:
+    network_data: Dados da rede
+    demand: Demanda
+    pressure: Pressão mínima
+  returns: Dimensionamento da rede
+  example: network_design(rede_agua, 150, 10)
+
+basin_analysis:
+  name: Análise de Bacia
+  description: Analisa bacias hidrográficas e drenagem
+  category: Hidráulica
+  parameters:
+    basin_area: Área da bacia
+    rainfall: Precipitação
+    soil_type: Tipo de solo
+  returns: Vazão de projeto
+  example: basin_analysis(2.5, 120, "impermeável")
+
+# === FERRAMENTAS DE PLANEJAMENTO ===
+gantt_generator:
+  name: Gerador de Cronograma Gantt
+  description: Gera cronogramas Gantt para projetos de engenharia
+  category: Planejamento
+  parameters:
+    activities: Lista de atividades
+    durations: Durações
+    dependencies: Dependências
+  returns: Cronograma Gantt
+  example: gantt_generator(["fundação", "estrutura", "acabamento"], [30, 60, 45], [None, "fundação", "estrutura"])
+
+activity_sequencer:
+  name: Sequenciador de Atividades
+  description: Otimiza sequenciamento de atividades de construção
+  category: Planejamento
+  parameters:
+    activities: Atividades
+    resources: Recursos disponíveis
+    constraints: Restrições
+  returns: Sequência otimizada
+  example: activity_sequencer(atividades_obra, recursos_obra, restricoes_canteiro)
+
+scenario_simulation:
+  name: Simulação de Cenários
+  description: Simula diferentes cenários de projeto
+  category: Planejamento
+  parameters:
+    base_scenario: Cenário base
+    variations: Variações
+    metrics: Métricas de avaliação
+  returns: Análise de cenários
+  example: scenario_simulation(cronograma_base, ["atraso_10%", "otimizacao_20%"], ["prazo", "custo"])
+
+# === FERRAMENTAS DE CUSTOS ===
+budgeting_tool:
+  name: Ferramenta de Orçamentação
+  description: Cria e gerencia orçamentos de obras
+  category: Custos
+  parameters:
+    project_data: Dados do projeto
+    unit_prices: Preços unitários
+    quantities: Quantidades
+  returns: Orçamento detalhado
+  example: budgeting_tool(dados_projeto, precos_unitarios, quantitativos)
+
+cost_composition:
+  name: Análise de Composição de Custos
+  description: Analisa composições de custos (material, mão de obra, equipamento)
+  category: Custos
+  parameters:
+    composition: Composição de custos
+    quantities: Quantidades
+    prices: Preços
+  returns: Análise de custos
+  example: cost_composition("concreto_armado", 100, precos_materiais)
+
+financial_control:
+  name: Controle Financeiro
+  description: Monitora e controla custos do projeto
+  category: Custos
+  parameters:
+    budget: Orçamento inicial
+    actual_costs: Custos reais
+    period: Período de análise
+  returns: Relatório de controle
+  example: financial_control(1000000, custos_reais, "2024-01")
+
+# === FERRAMENTAS DE QUALIDADE ===
+checklist_management:
+  name: Gestão de Checklists
+  description: Aplica e gerencia checklists de qualidade
+  category: Qualidade
+  parameters:
+    checklist_type: Tipo de checklist
+    items: Itens verificados
+    status: Status dos itens
+  returns: Relatório de checklist
+  example: checklist_management("fundação", itens_fundacao, status_verificacao)
+
+inspection_reporting:
+  name: Relatório de Inspeção
+  description: Gera relatórios de inspeção de qualidade
+  category: Qualidade
+  parameters:
+    inspection_data: Dados da inspeção
+    findings: Achados
+    recommendations: Recomendações
+  returns: Relatório de inspeção
+  example: inspection_reporting(dados_inspecao, achados_qualidade, recomendacoes)
+
+material_traceability:
+  name: Rastreabilidade de Materiais
+  description: Controla rastreabilidade de materiais na obra
+  category: Qualidade
+  parameters:
+    material: Material
+    batch: Lote
+    location: Localização
+  returns: Informações de rastreabilidade
+  example: material_traceability("cimento", "LOTE001", "fundação_bloco_A")
+
+# === FERRAMENTAS DE SEGURANÇA ===
+risk_analysis:
+  name: Análise de Riscos
+  description: Realiza análise de riscos (APR, AST)
+  category: Segurança
+  parameters:
+    activity: Atividade
+    hazards: Perigos identificados
+    probability: Probabilidade
+  returns: Análise de riscos
+  example: risk_analysis("trabalho_altura", perigos_altura, probabilidades)
+
+safety_plan_generator:
+  name: Gerador de Plano de Segurança
+  description: Elabora planos de segurança do trabalho
+  category: Segurança
+  parameters:
+    project_type: Tipo de projeto
+    activities: Atividades críticas
+    measures: Medidas de segurança
+  returns: Plano de segurança
+  example: safety_plan_generator("construção_edifício", atividades_criticas, medidas_seguranca)
+
+compliance_checker:
+  name: Verificador de Conformidade
+  description: Verifica conformidade com normas de segurança (NR-18, NR-35)
+  category: Segurança
+  parameters:
+    norm: Norma aplicável
+    requirements: Requisitos
+    compliance: Conformidade atual
+  returns: Relatório de conformidade
+  example: compliance_checker("NR-18", requisitos_nr18, conformidade_atual)
+
+# === FERRAMENTAS AMBIENTAIS ===
+environmental_assessment:
+  name: Avaliação de Impacto Ambiental
+  description: Avalia impactos ambientais de projetos
+  category: Ambiental
+  parameters:
+    project_scope: Escopo do projeto
+    environmental_factors: Fatores ambientais
+    sensitivity: Sensibilidade ambiental
+  returns: Avaliação de impacto
+  example: environmental_assessment("construção_ponte", fatores_ambientais, sensibilidade_local)
+
+licensing_tool:
+  name: Ferramenta de Licenciamento
+  description: Acompanha processos de licenciamento ambiental
+  category: Ambiental
+  parameters:
+    project_type: Tipo de projeto
+    location: Localização
+    requirements: Requisitos legais
+  returns: Status do licenciamento
+  example: licensing_tool("infraestrutura", "São Paulo", requisitos_ambientais)
+
+mitigation_measures:
+  name: Medidas Mitigadoras
+  description: Sugere medidas mitigadoras e compensatórias
+  category: Ambiental
+  parameters:
+    impacts: Impactos identificados
+    severity: Severidade
+    feasibility: Viabilidade
+  returns: Medidas mitigadoras
+  example: mitigation_measures(impactos_identificados, severidade_impactos, viabilidade_medidas)
+
+# === FERRAMENTAS DE SUSTENTABILIDADE ===
+green_certification:
+  name: Guia de Certificação Verde
+  description: Fornece informações sobre certificações (LEED, AQUA)
+  category: Sustentabilidade
+  parameters:
+    certification_type: Tipo de certificação
+    project_characteristics: Características do projeto
+    requirements: Requisitos
+  returns: Guia de certificação
+  example: green_certification("LEED", caracteristicas_projeto, requisitos_leed)
+
+sustainable_materials:
+  name: Banco de Materiais Sustentáveis
+  description: Consulta banco de dados de materiais sustentáveis
+  category: Sustentabilidade
+  parameters:
+    material_type: Tipo de material
+    sustainability_criteria: Critérios de sustentabilidade
+    availability: Disponibilidade
+  returns: Materiais sustentáveis
+  example: sustainable_materials("concreto", criterios_sustentabilidade, disponibilidade_local)
+
+energy_efficiency:
+  name: Análise de Eficiência Energética
+  description: Analisa eficiência energética de edifícios
+  category: Sustentabilidade
+  parameters:
+    building_data: Dados do edifício
+    systems: Sistemas instalados
+    usage_patterns: Padrões de uso
+  returns: Análise de eficiência
+  example: energy_efficiency(dados_edificio, sistemas_energia, padroes_uso)
+
+# === FERRAMENTAS BIM ===
+model_review:
+  name: Revisão de Modelo 3D
+  description: Visualiza e analisa modelos 3D (simulação)
+  category: BIM
+  parameters:
+    model_file: Arquivo do modelo
+    review_aspects: Aspectos de revisão
+    standards: Padrões aplicáveis
+  returns: Relatório de revisão
+  example: model_review("modelo_revit.rvt", ["geometria", "informações"], padroes_bim)
+
+clash_detection:
+  name: Detecção de Conflitos
+  description: Detecta conflitos e interferências entre modelos (simulação)
+  category: BIM
+  parameters:
+    models: Modelos para comparação
+    tolerance: Tolerância de conflito
+    priority: Prioridade dos elementos
+  returns: Relatório de conflitos
+  example: clash_detection([modelo_estrutural, modelo_hidraulico], 0.05, prioridades_elementos)
+
+quantity_extraction:
+  name: Extração de Quantitativos
+  description: Extrai quantitativos de modelos (simulação)
+  category: BIM
+  parameters:
+    model: Modelo BIM
+    elements: Elementos para extração
+    units: Unidades de medida
+  returns: Quantitativos extraídos
+  example: quantity_extraction(modelo_bim, ["vigas", "pilares"], "m³")
+
+# === FERRAMENTAS DE INOVAÇÃO ===
+technology_scouting:
+  name: Busca de Tecnologias
+  description: Busca por novas tecnologias (IoT, automação, IA)
+  category: Inovação
+  parameters:
+    technology_area: Área tecnológica
+    maturity_level: Nível de maturidade
+    application: Aplicação desejada
+  returns: Tecnologias encontradas
+  example: technology_scouting("IoT", "mature", "monitoramento_obra")
+
+roi_calculator:
+  name: Calculadora de ROI
+  description: Calcula Retorno sobre Investimento de novas tecnologias
+  category: Inovação
+  parameters:
+    investment: Investimento inicial
+    benefits: Benefícios esperados
+    timeframe: Prazo de análise
+  returns: Análise de ROI
+  example: roi_calculator(50000, beneficios_tecnologia, 24)
+
+pilot_planner:
+  name: Planejador de Projeto-Piloto
+  description: Planeja projetos-piloto para novas implementações
+  category: Inovação
+  parameters:
+    technology: Tecnologia
+    scope: Escopo do piloto
+    success_criteria: Critérios de sucesso
+  returns: Plano do projeto-piloto
+  example: pilot_planner("drones_inspecao", "fundação_bloco_A", criterios_sucesso)
+
+# === FERRAMENTAS DE COMUNICAÇÃO ===
+presentation_generator:
+  name: Gerador de Apresentações
+  description: Cria apresentações técnicas para stakeholders
+  category: Comunicação
+  parameters:
+    content: Conteúdo da apresentação
+    audience: Público-alvo
+    format: Formato desejado
+  returns: Apresentação gerada
+  example: presentation_generator(conteudo_projeto, "diretores", "powerpoint")
+
+stakeholder_analysis:
+  name: Análise de Stakeholders
+  description: Analisa stakeholders e seus interesses
+  category: Comunicação
+  parameters:
+    project_scope: Escopo do projeto
+    stakeholders: Lista de stakeholders
+    interests: Interesses identificados
+  returns: Análise de stakeholders
+  example: stakeholder_analysis(escopo_projeto, lista_stakeholders, interesses_identificados)
+
+feedback_collector:
+  name: Coletor de Feedback
+  description: Coleta e sumariza feedback de stakeholders
+  category: Comunicação
+  parameters:
+    feedback_sources: Fontes de feedback
+    categories: Categorias de feedback
+    analysis_period: Período de análise
+  returns: Relatório de feedback
+  example: feedback_collector(["cliente", "equipe"], ["qualidade", "prazo"], "2024-01")
+
+# === FERRAMENTAS DE DOCUMENTAÇÃO ===
+document_generator:
+  name: Gerador de Documentos
+  description: Gera documentos em formatos como Word (.docx) ou PDF
+  category: Documentação
+  parameters:
+    template: Template do documento
+    data: Dados para preenchimento
+    format: Formato de saída
+  returns: Documento gerado
+  example: document_generator("relatorio_tecnico.docx", dados_relatorio, "pdf")
+
+text_formatter:
+  name: Formatador de Texto
+  description: Formata texto, aplica estilos e padronização
+  category: Documentação
+  parameters:
+    text: Texto para formatação
+    style: Estilo desejado
+    standards: Padrões aplicáveis
+  returns: Texto formatado
+  example: text_formatter(texto_tecnico, "relatorio", padroes_abnt)
+
+template_filler:
+  name: Preenchedor de Templates
+  description: Preenche templates predefinidos para relatórios e documentos
+  category: Documentação
+  parameters:
+    template: Template
+    variables: Variáveis para preenchimento
+    validation: Validação de dados
+  returns: Documento preenchido
+  example: template_filler("memorial_descritivo.docx", variaveis_projeto, validacao_dados)
+
+grammar_checker:
+  name: Verificador de Gramática
+  description: Verifica gramática, ortografia e estilo
+  category: Documentação
+  parameters:
+    text: Texto para verificação
+    language: Idioma
+    style_guide: Guia de estilo
+  returns: Relatório de verificação
+  example: grammar_checker(texto_documento, "portugues", "abnt")
+
+# === FERRAMENTAS DE REVISÃO ===
+normative_checker:
+  name: Verificador Normativo
+  description: Verifica aderência a normas técnicas específicas
+  category: Revisão
+  parameters:
+    document: Documento para verificação
+    norms: Normas aplicáveis
+    compliance_level: Nível de conformidade
+  returns: Relatório de conformidade
+  example: normative_checker(documento_projeto, ["NBR 6118", "NBR 6120"], "strict")
+
+calculation_validator:
+  name: Validador de Cálculos
+  description: Verifica cálculos e fórmulas em planilhas ou documentos
+  category: Revisão
+  parameters:
+    calculations: Cálculos para validação
+    expected_results: Resultados esperados
+    tolerance: Tolerância aceitável
+  returns: Relatório de validação
+  example: calculation_validator(calculos_estruturais, resultados_esperados, 0.01)
+
+document_comparison:
+  name: Comparador de Documentos
+  description: Compara diferentes versões de documentos para identificar alterações
+  category: Revisão
+  parameters:
+    document1: Primeira versão
+    document2: Segunda versão
+    comparison_type: Tipo de comparação
+  returns: Relatório de diferenças
+  example: document_comparison("versao_1.docx", "versao_2.docx", "detailed")
+
+checklist_applier:
+  name: Aplicador de Checklists
+  description: Aplica checklists de qualidade e conformidade
+  category: Revisão
+  parameters:
+    checklist: Checklist a ser aplicado
+    document: Documento para verificação
+    criteria: Critérios de avaliação
+  returns: Relatório de checklist
+  example: checklist_applier(checklist_qualidade, documento_projeto, criterios_avaliacao)
+
+# === FERRAMENTAS LEGAIS ===
+contract_reviewer:
+  name: Revisor de Contratos
+  description: Analisa e revisa cláusulas contratuais
+  category: Legal
+  parameters:
+    contract: Contrato para revisão
+    contract_type: Tipo de contrato
+    risk_factors: Fatores de risco
+  returns: Relatório de revisão
+  example: contract_reviewer(contrato_obra, "empreitada", fatores_risco)
+
+regulatory_checker:
+  name: Verificador Regulatório
+  description: Verifica conformidade com leis e regulamentos
+  category: Legal
+  parameters:
+    project_scope: Escopo do projeto
+    regulations: Regulamentos aplicáveis
+    compliance_requirements: Requisitos de conformidade
+  returns: Relatório de conformidade
+  example: regulatory_checker(escopo_projeto, regulamentos_aplicaveis, requisitos_conformidade)
+
+legal_risk_assessment:
+  name: Avaliação de Riscos Jurídicos
+  description: Avalia riscos jurídicos em cenários específicos
+  category: Legal
+  parameters:
+    scenario: Cenário para análise
+    risk_factors: Fatores de risco
+    mitigation_options: Opções de mitigação
+  returns: Avaliação de riscos
+  example: legal_risk_assessment(cenario_projeto, fatores_risco_juridico, opcoes_mitigacao)
+
+# === FERRAMENTAS DE COORDENAÇÃO ===
+communication_hub:
+  name: Hub de Comunicação
+  description: Envia mensagens e coordena entre outros agentes
+  category: Coordenação
+  parameters:
+    message: Mensagem a ser enviada
+    recipients: Destinatários
+    priority: Prioridade da mensagem
+  returns: Status da comunicação
+  example: communication_hub("Reunião técnica às 14h", ["estrutural", "hidraulico"], "high")
+
+conflict_resolver:
+  name: Resolvedor de Conflitos
+  description: Analisa conflitos e sugere soluções
+  category: Coordenação
+  parameters:
+    conflict_description: Descrição do conflito
+    parties_involved: Partes envolvidas
+    constraints: Restrições
+  returns: Soluções propostas
+  example: conflict_resolver("Conflito entre estrutural e hidráulico", ["estrutural", "hidraulico"], restricoes_projeto)
+
+task_assigner:
+  name: Atribuidor de Tarefas
+  description: Atribui e reatribui tarefas entre agentes
+  category: Coordenação
+  parameters:
+    tasks: Lista de tarefas
+    agents: Agentes disponíveis
+    priorities: Prioridades das tarefas
+  returns: Atribuições realizadas
+  example: task_assigner(tarefas_projeto, agentes_disponiveis, prioridades_tarefas)
+
+progress_tracker:
+  name: Rastreador de Progresso
+  description: Monitora o progresso das tarefas e do projeto
+  category: Coordenação
+  parameters:
+    project_plan: Plano do projeto
+    current_status: Status atual
+    milestones: Marcos do projeto
+  returns: Relatório de progresso
+  example: progress_tracker(plano_projeto, status_atual, marcos_projeto)
+
+# === FERRAMENTAS EXISTENTES (MANTIDAS) ===
 read_excel_file:
   name: Ler Arquivo Excel
-  description: Lê um arquivo Excel completo e retorna informações estruturadas sobre
-    sua estrutura
+  description: Lê um arquivo Excel completo e retorna informações estruturadas sobre sua estrutura
   category: Excel
   parameters:
     file_path: Caminho do arquivo Excel
-  returns: Dicionário com informações do arquivo (colunas, linhas, tipos de dados,
-    etc.)
+  returns: Dicionário com informações do arquivo (colunas, linhas, tipos de dados, etc.)
   example: read_excel_file('dados.xlsx')
-compare_text_similarity:
-  name: Comparar Similaridade de Texto
-  description: Compara a similaridade entre duas listas de textos usando algoritmos
-    fuzzy matching
-  category: Análise
-  parameters:
-    list1: Primeira lista de textos
-    list2: Segunda lista de textos
-  returns: Dicionário com correspondências e scores de similaridade
-  example: compare_text_similarity(['cimento', 'areia'], ['cimento portland', 'areia
-    média'])
-analyze_excel_similarity:
-  name: Análise de Similaridade Excel
-  description: Realiza análise completa de similaridade entre duas planilhas Excel
-  category: Excel
-  parameters:
-    file1_path: Caminho do primeiro arquivo Excel
-    file2_path: Caminho do segundo arquivo Excel
-    column1: Nome da coluna no primeiro arquivo
-    column2: Nome da coluna no segundo arquivo
-  returns: Análise completa com estatísticas e recomendações
-  example: analyze_excel_similarity('orcamento1.xlsx', 'orcamento2.xlsx', 'Material',
-    'Descrição')
-detect_data_patterns:
-  name: Detectar Padrões nos Dados
-  description: Analisa uma coluna de dados e detecta padrões, tipos de dados e características
-  category: Análise
-  parameters:
-    file_path: Caminho do arquivo Excel
-    column_name: Nome da coluna a ser analisada
-  returns: Dicionário com padrões detectados nos dados
-  example: detect_data_patterns('dados.xlsx', 'Preço')
-generate_excel_report:
-  name: Gerar Relatório Excel
-  description: Gera um relatório estruturado baseado nos resultados de análise
-  category: Relatórios
-  parameters:
-    analysis_results: Resultados da análise (dicionário)
-  returns: Relatório formatado em texto
-  example: generate_excel_report(resultados_analise)
+
 validate_excel_file:
   name: Validar Arquivo Excel
-  description: Valida um arquivo Excel e retorna informações sobre sua estrutura e
-    qualidade
+  description: Valida um arquivo Excel e retorna informações sobre sua estrutura e qualidade
   category: Excel
   parameters:
     file_path: Caminho do arquivo Excel
   returns: Dicionário com informações de validação
   example: validate_excel_file('dados.xlsx')
+
 whatsapp_connect:
   name: Conectar ao WhatsApp
   description: Estabelece conexão com o WhatsApp Web para monitoramento de grupos
@@ -75,6 +689,7 @@ whatsapp_connect:
     session_name: Nome da sessão do WhatsApp
   returns: Status da conexão
   example: whatsapp_connect('minha_sessao')
+
 whatsapp_get_messages:
   name: Obter Mensagens do WhatsApp
   description: Obtém mensagens de um grupo específico do WhatsApp
@@ -84,6 +699,7 @@ whatsapp_get_messages:
     limit: Número máximo de mensagens a obter
   returns: Lista de mensagens com metadados
   example: whatsapp_get_messages('Grupo de Trabalho', 100)
+
 extract_cloud_links:
   name: Extrair Links de Nuvem
   description: Extrai links de serviços em nuvem (Google Drive, OneDrive, Dropbox) de mensagens
@@ -92,6 +708,7 @@ extract_cloud_links:
     messages: Lista de mensagens do WhatsApp
   returns: Lista de links de serviços em nuvem encontrados
   example: extract_cloud_links(mensagens_grupo)
+
 download_cloud_file:
   name: Baixar Arquivo da Nuvem
   description: Baixa arquivo de serviços em nuvem (Google Drive, OneDrive, Dropbox)
@@ -101,6 +718,7 @@ download_cloud_file:
     output_path: Caminho onde salvar o arquivo
   returns: Status do download e caminho do arquivo
   example: download_cloud_file('https://drive.google.com/file/d/123', './downloads/')
+
 download_whatsapp_file:
   name: Baixar Arquivo do WhatsApp
   description: Baixa arquivo anexado a uma mensagem do WhatsApp
@@ -110,6 +728,7 @@ download_whatsapp_file:
     output_path: Caminho onde salvar o arquivo
   returns: Status do download e caminho do arquivo
   example: download_whatsapp_file(mensagem_com_arquivo, './downloads/')
+
 rename_file_with_timestamp:
   name: Renomear Arquivo com Timestamp
   description: Adiciona timestamp (data e hora) ao nome do arquivo
@@ -119,6 +738,7 @@ rename_file_with_timestamp:
     timestamp: Timestamp da mensagem (datetime)
   returns: Caminho do arquivo renomeado
   example: rename_file_with_timestamp('./arquivo.pdf', '2024-01-15 14:30:00')
+
 organize_files_by_date:
   name: Organizar Arquivos por Data
   description: Organiza arquivos em pastas por data de download
