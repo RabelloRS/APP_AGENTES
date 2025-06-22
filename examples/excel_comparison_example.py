@@ -1,21 +1,19 @@
 """
-Exemplo prático de comparação de planilhas Excel usando o Agentes de Engenharia da Propor
-Este exemplo demonstra o MVP do sistema de agentes inteligentes
+Exemplo de demonstração do MVP - Análise de Planilhas Excel
 
 Desenvolvido pela Propor Engenharia
 Responsável Técnico: Eng. Civil Rodrigo Emanuel Rabello
 CREA-RS: 167.175-D | CNPJ: 41.556.670/0001-76
 """
 
+import os
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 # Adicionar o diretório raiz ao path para importar o módulo app
 sys.path.append(str(Path(__file__).parent.parent))
-
-import os
-
-import pandas as pd
 
 # Importar as ferramentas do sistema
 from app.utils.tools import (analyze_excel_similarity, detect_data_patterns,
@@ -140,8 +138,8 @@ def demonstrate_excel_analysis():
     print("📁 Criando arquivos de exemplo...")
     file1_path, file2_path = create_sample_excel_files()
 
-    print(f"✅ Arquivo 1 criado: {file1_path}")
-    print(f"✅ Arquivo 2 criado: {file2_path}")
+    print("✅ Arquivo 1 criado: " + file1_path)
+    print("✅ Arquivo 2 criado: " + file2_path)
 
     # Validar arquivos
     print("\n🔍 Validando arquivos...")
@@ -150,10 +148,18 @@ def demonstrate_excel_analysis():
 
     if validation1["is_valid"] and validation2["is_valid"]:
         print(
-            f"✅ Arquivo 1: {validation1['total_rows']} linhas, {validation1['total_columns']} colunas"
+            "✅ Arquivo 1: "
+            + str(validation1["total_rows"])
+            + " linhas, "
+            + str(validation1["total_columns"])
+            + " colunas"
         )
         print(
-            f"✅ Arquivo 2: {validation2['total_rows']} linhas, {validation2['total_columns']} colunas"
+            "✅ Arquivo 2: "
+            + str(validation2["total_rows"])
+            + " linhas, "
+            + str(validation2["total_columns"])
+            + " colunas"
         )
     else:
         print("❌ Erro na validação dos arquivos")
@@ -166,12 +172,15 @@ def demonstrate_excel_analysis():
             file1_path, file2_path, "Material", "Material"
         )
 
-        print(f"✅ Análise concluída!")
+        print("✅ Análise concluída!")
         print(
-            f"📈 Score médio de similaridade: {analysis_results['similarity_analysis']['average_score']:.1f}%"
+            "📈 Score médio de similaridade: "
+            + str(analysis_results["similarity_analysis"]["average_score"])
+            + "%"
         )
         print(
-            f"🎯 Itens com alta similaridade (≥80%): {analysis_results['similarity_analysis']['high_similarity_count']}"
+            "🎯 Itens com alta similaridade (≥80%): "
+            + str(analysis_results["similarity_analysis"]["high_similarity_count"])
         )
 
         # Detectar padrões
@@ -179,15 +188,15 @@ def demonstrate_excel_analysis():
         patterns1 = detect_data_patterns(file1_path, "Material")
         patterns2 = detect_data_patterns(file2_path, "Material")
 
-        print(f"📊 Padrões detectados no arquivo 1:")
-        print(f"   - Tipo de dados: {patterns1['data_type']}")
-        print(f"   - Valores únicos: {patterns1['unique_values']}")
-        print(f"   - Valores nulos: {patterns1['null_values']}")
+        print("📊 Padrões detectados no arquivo 1:")
+        print("   - Tipo de dados: " + patterns1["data_type"])
+        print("   - Valores únicos: " + str(patterns1["unique_values"]))
+        print("   - Valores nulos: " + str(patterns1["null_values"]))
 
-        print(f"📊 Padrões detectados no arquivo 2:")
-        print(f"   - Tipo de dados: {patterns2['data_type']}")
-        print(f"   - Valores únicos: {patterns2['unique_values']}")
-        print(f"   - Valores nulos: {patterns2['null_values']}")
+        print("📊 Padrões detectados no arquivo 2:")
+        print("   - Tipo de dados: " + patterns2["data_type"])
+        print("   - Valores únicos: " + str(patterns2["unique_values"]))
+        print("   - Valores nulos: " + str(patterns2["null_values"]))
 
         # Gerar relatório
         print("\n📄 Gerando relatório detalhado...")
@@ -198,12 +207,12 @@ def demonstrate_excel_analysis():
         with open(report_path, "w", encoding="utf-8") as f:
             f.write(report)
 
-        print(f"✅ Relatório salvo em: {report_path}")
+        print("✅ Relatório salvo em: " + str(report_path))
 
         # Mostrar recomendações
         print("\n💡 Recomendações:")
         for rec in analysis_results["recommendations"]:
-            print(f"   - {rec}")
+            print("   - " + rec)
 
         # Mostrar algumas correspondências
         print("\n🔍 Exemplos de correspondências:")
@@ -215,17 +224,33 @@ def demonstrate_excel_analysis():
         print("Top 3 melhores correspondências:")
         for i, (original, match_info) in enumerate(sorted_matches[:3], 1):
             print(
-                f"   {i}. '{original}' → '{match_info['match']}' (Score: {match_info['score']:.1f}%)"
+                "   "
+                + str(i)
+                + ". '"
+                + original
+                + "' → '"
+                + match_info["match"]
+                + "' (Score: "
+                + str(match_info["score"])
+                + "%)"
             )
 
         print("\nTop 3 piores correspondências:")
         for i, (original, match_info) in enumerate(sorted_matches[-3:], 1):
             print(
-                f"   {i}. '{original}' → '{match_info['match']}' (Score: {match_info['score']:.1f}%)"
+                "   "
+                + str(i)
+                + ". '"
+                + original
+                + "' → '"
+                + match_info["match"]
+                + "' (Score: "
+                + str(match_info["score"])
+                + "%)"
             )
 
     except Exception as e:
-        print(f"❌ Erro durante a análise: {str(e)}")
+        print("❌ Erro durante a análise: " + str(e))
 
     finally:
         # Limpar arquivos temporários
@@ -234,7 +259,7 @@ def demonstrate_excel_analysis():
             os.remove(file1_path)
             os.remove(file2_path)
             print("✅ Arquivos temporários removidos")
-        except:
+        except Exception:
             print("⚠️ Não foi possível remover alguns arquivos temporários")
 
 

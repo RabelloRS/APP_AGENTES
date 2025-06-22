@@ -2,6 +2,7 @@
 Exemplo de teste para a funcionalidade de edição de agentes
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -25,17 +26,17 @@ def test_agent_editing():
     for agent_type in manager.list_available_agent_types():
         info = manager.get_agent_info(agent_type)
         if info:
-            print(f"  - {info['name']} ({agent_type})")
+            print("  - " + info["name"] + " (" + agent_type + ")")
 
     # Testar edição de um agente
     test_agent = "researcher"
-    print(f"\n✏️ Testando edição do agente: {test_agent}")
+    print("\n✏️ Testando edição do agente: " + test_agent)
 
     # Obter configuração atual
     current_config = manager.get_agent_info(test_agent)
     if current_config:
-        print(f"  Nome atual: {current_config['name']}")
-        print(f"  Função atual: {current_config['role']}")
+        print("  Nome atual: " + current_config["name"])
+        print("  Função atual: " + current_config["role"])
 
         # Simular alterações
         new_config = {
@@ -48,9 +49,9 @@ def test_agent_editing():
             "tools": [],
         }
 
-        print(f"\n📝 Aplicando alterações...")
-        print(f"  Novo nome: {new_config['name']}")
-        print(f"  Nova função: {new_config['role']}")
+        print("\n📝 Aplicando alterações...")
+        print("  Novo nome: " + new_config["name"])
+        print("  Nova função: " + new_config["role"])
 
         # Aplicar alterações
         success = manager.update_agent_config(test_agent, new_config)
@@ -61,8 +62,8 @@ def test_agent_editing():
             # Verificar se as alterações foram salvas
             updated_config = manager.get_agent_info(test_agent)
             if updated_config:
-                print(f"  Nome atualizado: {updated_config['name']}")
-                print(f"  Função atualizada: {updated_config['role']}")
+                print("  Nome atualizado: " + updated_config["name"])
+                print("  Função atualizada: " + updated_config["role"])
 
             # Recarregar configurações
             print("\n🔄 Recarregando configurações...")
@@ -72,8 +73,8 @@ def test_agent_editing():
                 # Verificar se as alterações persistiram
                 reloaded_config = manager.get_agent_info(test_agent)
                 if reloaded_config:
-                    print(f"  Nome após reload: {reloaded_config['name']}")
-                    print(f"  Função após reload: {reloaded_config['role']}")
+                    print("  Nome após reload: " + reloaded_config["name"])
+                    print("  Função após reload: " + reloaded_config["role"])
         else:
             print("❌ Erro ao aplicar alterações!")
 

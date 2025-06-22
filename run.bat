@@ -66,6 +66,7 @@ echo A aplicacao sera aberta em: http://localhost:8501
 echo.
 echo Pressione Ctrl+C para parar a aplicacao
 echo.
+REM Garantir que o PYTHONPATH inclua o diretório do projeto
 set PYTHONPATH=%CD%
 streamlit run app/main.py
 pause
@@ -73,15 +74,17 @@ goto MENU
 
 :RUN_AGENT_TESTS
 ECHO Rodando testes de agentes...
-set PYTHONPATH=.
+REM Garantir que o PYTHONPATH inclua o diretório do projeto
+set PYTHONPATH=%CD%
 python examples/test_agent_creation.py
 pause
 goto MENU
 
 :RUN_PYTEST
 ECHO Rodando todos os testes (pytest)...
-set PYTHONPATH=.
-pytest tests/
+REM Garantir que o PYTHONPATH inclua o diretório do projeto
+set PYTHONPATH=%CD%
+pytest tests/ --disable-warnings
 pause
 goto MENU
 

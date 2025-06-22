@@ -16,7 +16,9 @@ ignore =
     # F401 - Imports não utilizados (autoflake remove)
     F401,
     # F841 - Variáveis locais não utilizadas (autoflake remove)
-    F841
+    F841,
+    # E402 - Imports não no topo do arquivo (permitido para sys.path modifications)
+    E402
 
 # Comprimento máximo da linha
 max-line-length = 88
