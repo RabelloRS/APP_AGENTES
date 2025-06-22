@@ -26,6 +26,12 @@ st.set_page_config(
 def main():
     """Função principal da aplicação"""
 
+    # Inicializar gerenciadores no session_state se não existirem
+    if 'agent_manager' not in st.session_state:
+        st.session_state.agent_manager = AgentManager()
+    if 'crew_manager' not in st.session_state:
+        st.session_state.crew_manager = CrewManager(st.session_state.agent_manager)
+
     # Header
     st.title("🤖 APP_AGENTES")
     st.markdown("### Sistema de Agentes Inteligentes com CrewAI")
@@ -77,10 +83,12 @@ def show_dashboard():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("Agentes Disponíveis", "5")
+        num_agents = len(st.session_state.agent_manager.list_available_agent_types())
+        st.metric("Agentes Disponíveis", f"{num_agents}")
 
     with col2:
-        st.metric("Crews Criadas", "3")
+        num_crews = len(st.session_state.crew_manager.list_crew_names())
+        st.metric("Crews Criadas", f"{num_crews}")
 
     with col3:
         st.metric("Tarefas Executadas", "12")
@@ -105,31 +113,27 @@ def show_agents_tab():
     """Exibe a aba de gerenciamento de agentes"""
     st.header("🤖 Gerenciamento de Agentes")
 
-    # Lista de agentes disponíveis
-    agents = [
-        {"name": "Pesquisador", "role": "Realiza pesquisas e coleta informações"},
-        {"name": "Analista", "role": "Analisa dados e gera insights"},
-        {"name": "Escritor", "role": "Cria conteúdo e relatórios"},
-        {"name": "Revisor", "role": "Revisa e valida conteúdo"},
-        {"name": "Coordenador", "role": "Coordena tarefas entre agentes"},
-    ]
-
-    for agent in agents:
-        with st.expander(f"🤖 {agent['name']}"):
-            st.write(f"**Função:** {agent['role']}")
+    # Lista de agentes disponíveis dinamicamente
+    manager = st.session_state.agent_manager
+    for agent_type in manager.list_available_agent_types():
+        info = manager.get_agent_info(agent_type) or {}
+        name = info.get("name", agent_type)
+        role = info.get("role", "-")
+        with st.expander(f"🤖 {name}"):
+            st.write(f"**Função:** {role}")
 
             col1, col2 = st.columns(2)
             with col1:
                 if st.button(
-                    f"Configurar {agent['name']}", key=f"config_{agent['name']}"
+                    f"Configurar {name}", key=f"config_{agent_type}"
                 ):
-                    st.info(
-                        f"Configuração do agente {agent['name']} em desenvolvimento"
-                    )
+                    if not manager.get_agent(agent_type):
+                        manager.create_agent(agent_type)
+                    st.success(f"Agente {name} criado!")
 
             with col2:
-                if st.button(f"Testar {agent['name']}", key=f"test_{agent['name']}"):
-                    st.info(f"Teste do agente {agent['name']} em desenvolvimento")
+                if st.button(f"Testar {name}", key=f"test_{agent_type}"):
+                    st.info(f"Teste do agente {name} em desenvolvimento")
 
 
 def show_crews_tab():
@@ -142,52 +146,53 @@ def show_crews_tab():
     crew_name = st.text_input("Nome da Crew")
     crew_description = st.text_area("Descrição")
 
-    # Seleção de agentes
-    available_agents = ["Pesquisador", "Analista", "Escritor", "Revisor", "Coordenador"]
+    # Seleção de agentes dinâmicos
+    manager = st.session_state.agent_manager
+    available_agents = manager.list_available_agent_types()
     selected_agents = st.multiselect("Selecionar Agentes", available_agents)
 
     if st.button("Criar Crew"):
         if crew_name and selected_agents:
-            st.success(f"Crew '{crew_name}' criada com sucesso!")
-            st.write(f"Agentes: {', '.join(selected_agents)}")
+            crew = st.session_state.crew_manager.create_crew(
+                crew_name, selected_agents, crew_description
+            )
+            if crew:
+                st.success(f"Crew '{crew_name}' criada com sucesso!")
+            else:
+                st.error("Erro ao criar a crew")
         else:
             st.error("Preencha o nome da crew e selecione pelo menos um agente")
+
+    if st.button("Criar Crew de Análise de Planilhas"):
+        st.session_state.crew_manager.create_crew(
+            "Crew de Análise de Planilhas", ["excel_analyst"], "Comparar planilhas"
+        )
+        st.success("Crew de Análise de Planilhas criada")
 
     st.markdown("---")
 
     # Lista de crews existentes
     st.subheader("📋 Crews Existentes")
 
-    existing_crews = [
-        {
-            "name": "Crew de Pesquisa",
-            "agents": ["Pesquisador", "Analista"],
-            "status": "Ativa",
-        },
-        {
-            "name": "Crew de Conteúdo",
-            "agents": ["Escritor", "Revisor"],
-            "status": "Ativa",
-        },
-        {"name": "Crew de Coordenação", "agents": ["Coordenador"], "status": "Inativa"},
-    ]
+    existing_crews = st.session_state.crew_manager.get_all_crews()
 
-    for crew in existing_crews:
-        with st.expander(f"👥 {crew['name']} - {crew['status']}"):
-            st.write(f"**Agentes:** {', '.join(crew['agents'])}")
+    for name, crew in existing_crews.items():
+        agents_names = [agent.role for agent in crew.agents]
+        with st.expander(f"👥 {name}"):
+            st.write(f"**Agentes:** {', '.join(agents_names)}")
 
             col1, col2, col3 = st.columns(3)
             with col1:
-                if st.button(f"Executar {crew['name']}", key=f"run_{crew['name']}"):
-                    st.info(f"Execução da crew {crew['name']} em desenvolvimento")
+                if st.button(f"Executar {name}", key=f"run_{name}"):
+                    st.info(f"Execução da crew {name} em desenvolvimento")
 
             with col2:
-                if st.button(f"Editar {crew['name']}", key=f"edit_{crew['name']}"):
-                    st.info(f"Edição da crew {crew['name']} em desenvolvimento")
+                if st.button(f"Editar {name}", key=f"edit_{name}"):
+                    st.info(f"Edição da crew {name} em desenvolvimento")
 
             with col3:
-                if st.button(f"Deletar {crew['name']}", key=f"delete_{crew['name']}"):
-                    st.info(f"Deleção da crew {crew['name']} em desenvolvimento")
+                if st.button(f"Deletar {name}", key=f"delete_{name}"):
+                    st.info(f"Deleção da crew {name} em desenvolvimento")
 
 
 def show_execution_tab():
@@ -197,13 +202,21 @@ def show_execution_tab():
     # Seleção da crew
     st.subheader("🎯 Nova Tarefa")
 
-    crews = ["Crew de Pesquisa", "Crew de Conteúdo", "Crew de Coordenação"]
+    crew_manager = st.session_state.crew_manager
+    crews = crew_manager.list_crew_names()
     selected_crew = st.selectbox("Selecionar Crew", crews)
 
     # Input da tarefa
     task_description = st.text_area(
         "Descrição da Tarefa", placeholder="Descreva a tarefa que deseja executar..."
     )
+
+    # Campos extras para análise de planilhas
+    if selected_crew == "Crew de Análise de Planilhas":
+        file1 = st.file_uploader("Arquivo Excel 1", type=["xlsx"], key="excel1")
+        column1 = st.text_input("Coluna do Arquivo 1")
+        file2 = st.file_uploader("Arquivo Excel 2", type=["xlsx"], key="excel2")
+        column2 = st.text_input("Coluna do Arquivo 2")
 
     # Configurações adicionais
     col1, col2 = st.columns(2)
@@ -218,30 +231,31 @@ def show_execution_tab():
 
     # Botão de execução
     if st.button("🚀 Executar Tarefa", type="primary"):
-        if task_description:
-            with st.spinner("Executando tarefa..."):
-                # Simulação de execução
-                import time
-
-                time.sleep(2)
-
+        if selected_crew == "Crew de Análise de Planilhas":
+            if file1 and file2 and column1 and column2:
+                with st.spinner(f"Executando tarefa com a '{selected_crew}'..."):
+                    tmp1 = Path("/tmp/file1.xlsx")
+                    tmp1.write_bytes(file1.getbuffer())
+                    tmp2 = Path("/tmp/file2.xlsx")
+                    tmp2.write_bytes(file2.getbuffer())
+                    from app.utils.tools import read_excel_column, compare_text_similarity
+                    list1 = read_excel_column(str(tmp1), column1)
+                    list2 = read_excel_column(str(tmp2), column2)
+                    result = compare_text_similarity(list1, list2)
                 st.success("✅ Tarefa executada com sucesso!")
-
-                # Resultados simulados
                 st.subheader("📋 Resultados")
-                st.write("**Tarefa:** " + task_description)
-                st.write("**Crew:** " + selected_crew)
-                st.write("**Status:** Concluída")
-                st.write("**Tempo de execução:** 2.3 segundos")
-
-                # Exibir resultado
-                st.text_area(
-                    "Resultado da Execução",
-                    value="Este é um resultado simulado da execução da tarefa. Em uma implementação real, aqui apareceria o resultado gerado pelos agentes da crew.",
-                    height=200,
-                )
+                st.json(result)
+            else:
+                st.error("Envie os arquivos e informe as colunas para comparação")
         else:
-            st.error("Por favor, descreva a tarefa a ser executada")
+            if task_description:
+                with st.spinner(f"Executando tarefa com a '{selected_crew}'..."):
+                    result = crew_manager.execute_crew_task(selected_crew, task_description)
+                st.success("✅ Tarefa executada com sucesso!")
+                st.subheader("📋 Resultados")
+                st.text_area("Resultado da Execução", value=result, height=300)
+            else:
+                st.error("Por favor, descreva a tarefa a ser executada")
 
     st.markdown("---")
 
