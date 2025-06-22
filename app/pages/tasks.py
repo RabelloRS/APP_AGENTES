@@ -5,8 +5,35 @@ Gerenciamento de Tarefas - Configuração e Visualização de Tarefas
 import streamlit as st
 from pathlib import Path
 
+# Dicionário de nomes amigáveis para tarefas
+NOMES_TAREFAS = {
+    "research_task": "Pesquisa",
+    "analysis_task": "Análise de Dados",
+    "writing_task": "Redação de Relatório",
+    "review_task": "Revisão",
+    "coordination_task": "Coordenação",
+    "excel_analysis_task": "Análise de Excel",
+    "whatsapp_monitoring_task": "Monitoramento WhatsApp",
+    "file_download_task": "Download de Arquivos",
+    "file_organization_task": "Organização de Arquivos"
+}
+
+def get_task_category_icon(task_type):
+    """Retorna um ícone com base no tipo da tarefa."""
+    if "research" in task_type:
+        return "🔍"
+    elif "writing" in task_type:
+        return "✍️"
+    elif "review" in task_type:
+        return "✅"
+    elif "excel" in task_type:
+        return "📈"
+    elif "whatsapp" in task_type or "file" in task_type:
+        return "📂"
+    return "📊"
+
 def show_tasks_tab():
-    """Exibe a aba de gerenciamento de tarefas"""
+    """Exibe a aba de gerenciamento de tarefas."""
     st.header("📋 Gerenciamento de Tarefas")
     st.markdown("### Visualize e configure as tarefas disponíveis no sistema")
     
@@ -15,141 +42,85 @@ def show_tasks_tab():
         st.info("""
         **O que são tarefas?**
         Tarefas são ações específicas que os agentes podem executar para alcançar objetivos.
-        
-        **Tipos de tarefas disponíveis:**
-        - **research_task**: Pesquisa informações sobre um tópico
-        - **analysis_task**: Analisa dados e gera insights
-        - **writing_task**: Cria conteúdo e relatórios
-        - **review_task**: Revisa e valida resultados
-        - **excel_analysis_task**: Analisa planilhas Excel
-        
+
         **Como funcionam:**
-        1. Cada tarefa tem um agente responsável
-        2. Tarefas podem ser combinadas em crews
-        3. As tarefas são executadas sequencialmente
-        4. O resultado de uma tarefa pode alimentar a próxima
+        1. Cada tarefa tem um agente responsável.
+        2. Tarefas podem ser combinadas em crews (equipes).
+        3. As tarefas são executadas sequencialmente.
+        4. O resultado de uma tarefa pode alimentar a próxima.
         """)
 
-    # Lista de tarefas disponíveis
+    st.markdown("---")
+
     task_manager = st.session_state.task_manager
+    agent_manager = st.session_state.agent_manager
     
-    # Estatísticas das tarefas
-    st.subheader("📊 Estatísticas das Tarefas")
-    
-    total_tasks = len(task_manager.list_available_task_types())
-    tasks_with_agents = sum(1 for task_type in task_manager.list_available_task_types() 
-                           if task_manager.get_task_info(task_type, {}).get("agent"))
-    
-    stats_col1, stats_col2 = st.columns(2)
-    
-    with stats_col1:
-        st.metric("Total de Tarefas", total_tasks)
-    
-    with stats_col2:
-        st.metric("Tarefas com Agentes", tasks_with_agents)
-    
+    # Estatísticas
+    st.subheader("📊 Visão Geral")
+    try:
+        available_tasks = task_manager.list_available_task_types()
+        tasks_with_agents = sum(1 for task_type in available_tasks 
+                               if (task_manager.get_task_info(task_type) or {}).get("agent"))
+        
+        col1, col2 = st.columns(2)
+        col1.metric("Total de Tipos de Tarefas", len(available_tasks), help="Número total de tarefas pré-configuradas no sistema.")
+        col2.metric("Tarefas com Agente Atribuído", tasks_with_agents, help="Tarefas que já possuem um agente padrão definido.")
+    except Exception as e:
+        st.error(f"Não foi possível carregar as estatísticas das tarefas: {e}")
+
     st.markdown("---")
     
     # Lista detalhada de tarefas
-    st.subheader("📋 Tarefas Disponíveis")
+    st.subheader("📋 Detalhes das Tarefas Disponíveis")
     
-    for task_type in task_manager.list_available_task_types():
-        info = task_manager.get_task_info(task_type) or {}
-        description = info.get("description", "-")
-        expected_output = info.get("expected_output", "-")
-        agent_type = info.get("agent", "-")
-        
-        # Determinar categoria da tarefa
-        category = "📊 Análise"
-        if "research" in task_type:
-            category = "🔍 Pesquisa"
-        elif "writing" in task_type:
-            category = "✍️ Escrita"
-        elif "review" in task_type:
-            category = "✅ Revisão"
-        elif "excel" in task_type:
-            category = "📈 Excel"
+    try:
+        if not available_tasks:
+            st.warning("Nenhuma tarefa encontrada. Verifique o arquivo `app/config/tasks.yaml`.")
+        else:
+            for task_type in available_tasks:
+                info = task_manager.get_task_info(task_type) or {}
+                
+                nome_amigavel = NOMES_TAREFAS.get(task_type, task_type.replace("_", " ").title())
+                icon = get_task_category_icon(task_type)
+                
+                with st.expander(f"{icon} **{nome_amigavel}** (`{task_type}`)", expanded=False):
+                    description = info.get("description", "*Sem descrição*")
+                    expected_output = info.get("expected_output", "*Não especificado*")
+                    agent_name = info.get("agent", "Nenhum")
 
-        with st.expander(f"{category} {task_type}", expanded=False):
-            col1, col2 = st.columns([2, 1])
-            
-            with col1:
-                st.write(f"**Descrição:** {description}")
-                st.write(f"**Saída Esperada:** {expected_output}")
-                st.write(f"**Agente Responsável:** {agent_type}")
-                
-                # Mostrar parâmetros se existirem
-                if "parameters" in info:
-                    st.write("**Parâmetros:**")
-                    for param, desc in info["parameters"].items():
-                        st.write(f"  - `{param}`: {desc}")
-            
-            with col2:
-                # Status do agente responsável
-                if agent_type != "-":
-                    agent_manager = st.session_state.agent_manager
-                    agent_info = agent_manager.get_agent_info(agent_type)
-                    if agent_info:
-                        st.success(f"✅ Agente '{agent_info.get('name', agent_type)}' disponível")
-                    else:
-                        st.error(f"❌ Agente '{agent_type}' não encontrado")
-                else:
-                    st.warning("⚠️ Nenhum agente atribuído")
-                
-                # Botão para ver detalhes
-                if st.button(f"Ver Detalhes {task_type}", key=f"details_{task_type}"):
-                    st.json(info)
+                    st.markdown(f"**Descrição**: {description}")
+                    st.markdown(f"**Saída Esperada**: {expected_output}")
+
+                    st.markdown(f"**Agente Responsável Padrão**: `{agent_name}`")
+                    
+                    if agent_name != "Nenhum":
+                        agent_info = agent_manager.get_agent_info(agent_name)
+                        if agent_info:
+                            st.success(f"✅ Agente **{agent_info.get('name', agent_name)}** encontrado e pronto para uso.")
+                        else:
+                            st.error(f"❌ O agente **{agent_name}** não foi encontrado. Verifique a configuração.")
+
+                    if "parameters" in info:
+                        st.markdown("**Parâmetros da Tarefa:**")
+                        st.json(info["parameters"])
+    except Exception as e:
+        st.error(f"Ocorreu um erro ao carregar os detalhes das tarefas: {e}")
 
     # Informações sobre configuração
     st.markdown("---")
     st.subheader("ℹ️ Informações sobre Configuração")
     
-    info_col1, info_col2 = st.columns(2)
-    
-    with info_col1:
-        st.info("""
-        **Arquivo de Configuração:**
-        `app/config/tasks.yaml`
-        
-        **Estrutura de uma tarefa:**
-        ```yaml
-        task_name:
-          description: "Descrição da tarefa"
-          expected_output: "O que a tarefa deve retornar"
-          agent: "tipo_do_agente"
-          parameters:
-            param1: "Descrição do parâmetro"
-        ```
-        """)
-    
-    with info_col2:
-        st.info("""
-        **Como adicionar novas tarefas:**
-        1. Edite o arquivo `tasks.yaml`
-        2. Defina a descrição e saída esperada
-        3. Atribua um agente responsável
-        4. Recarregue as configurações
-        5. A nova tarefa estará disponível
-        """)
+    st.info("""
+    As tarefas são configuradas no arquivo `app/config/tasks.yaml`. 
+    Para adicionar ou modificar uma tarefa, edite este arquivo e recarregue a aplicação.
+    """)
     
     # Visualizar configuração atual
-    with st.expander("📄 Visualizar Configuração Atual"):
+    with st.expander("📄 Visualizar Configuração Atual (`tasks.yaml`)"):
         try:
             with open("app/config/tasks.yaml", "r", encoding="utf-8") as f:
                 current_config = f.read()
             st.code(current_config, language="yaml")
-
-            # Verificar se existe backup
-            backup_path = "app/config/tasks.yaml.backup"
-            if Path(backup_path).exists():
-                st.info("✅ Backup do arquivo original disponível")
-                if st.button("📋 Ver Backup"):
-                    with open(backup_path, "r", encoding="utf-8") as f:
-                        backup_content = f.read()
-                    st.code(backup_content, language="yaml")
-            else:
-                st.info("ℹ️ Nenhum backup encontrado (primeira edição)")
-
         except Exception as e:
             st.error(f"Erro ao ler arquivo de configuração: {e}")
 
@@ -181,8 +152,5 @@ def show_tasks_tab():
     for example in examples:
         with st.expander(f"📋 {example['title']}", expanded=False):
             st.write(f"**Descrição:** {example['description']}")
-            st.write(f"**Tarefas:** {', '.join(example['tasks'])}")
-            st.write(f"**Agentes:** {', '.join(example['agents'])}")
-            
-            if st.button(f"Ver Detalhes - {example['title']}", key=f"example_{example['title']}"):
-                st.info("Esta funcionalidade será implementada em breve") 
+            st.write("**Tarefas:** " + ", ".join([str(NOMES_TAREFAS.get(t, t)) for t in example['tasks']]))
+            st.write(f"**Agentes:** {', '.join(example['agents'])}") 

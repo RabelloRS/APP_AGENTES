@@ -39,27 +39,34 @@ def main():
     """Função principal da aplicação"""
 
     # Inicializar gerenciadores no session_state se não existirem
-    if "agent_manager" not in st.session_state:
-        st.session_state.agent_manager = AgentManager()
-    if "task_manager" not in st.session_state:
-        st.session_state.task_manager = TaskManager()
-    if "tools_manager" not in st.session_state:
-        st.session_state.tools_manager = ToolsManager()
-    if "crew_manager" not in st.session_state:
-        st.session_state.crew_manager = CrewManager(
-            st.session_state.agent_manager, st.session_state.task_manager
-        )
+    try:
+        if "agent_manager" not in st.session_state:
+            st.session_state.agent_manager = AgentManager()
+        if "task_manager" not in st.session_state:
+            st.session_state.task_manager = TaskManager()
+        if "tools_manager" not in st.session_state:
+            st.session_state.tools_manager = ToolsManager()
+        if "crew_manager" not in st.session_state:
+            st.session_state.crew_manager = CrewManager(
+                st.session_state.agent_manager, st.session_state.task_manager
+            )
 
-    # Configurar o ToolsManager no AgentManager
-    st.session_state.agent_manager.set_tools_manager(st.session_state.tools_manager)
+        # Configurar o ToolsManager no AgentManager
+        st.session_state.agent_manager.set_tools_manager(st.session_state.tools_manager)
+    except Exception as e:
+        st.error(f"Erro ao inicializar gerenciadores: {e}")
+        st.stop()
 
     # Header com logo da empresa
     col1, col2 = st.columns([1, 4])
 
     with col1:
         # Carregar e exibir o logo da empresa
-        logo_path = "media/logo/LOGO_PROPOR_MEDIO.jpg"
-        st.image(logo_path, width=120)
+        try:
+            logo_path = "media/logo/LOGO_PROPOR_MEDIO.jpg"
+            st.image(logo_path, width=120)
+        except Exception as e:
+            st.warning(f"Erro ao carregar logo: {e}")
 
     with col2:
         st.title("🏗️ Agentes de Engenharia da Propor")
@@ -90,10 +97,13 @@ def main():
 
         # Botão para recarregar configurações
         if st.button("🔄 Recarregar Configurações"):
-            if st.session_state.crew_manager.reload_configs():
-                st.success("Configurações recarregadas!")
-            else:
-                st.error("Erro ao recarregar configurações")
+            try:
+                if st.session_state.crew_manager.reload_configs():
+                    st.success("Configurações recarregadas!")
+                else:
+                    st.error("Erro ao recarregar configurações")
+            except Exception as e:
+                st.error(f"Erro ao recarregar configurações: {e}")
 
         # Informações da empresa
         st.markdown("---")
@@ -106,31 +116,30 @@ def main():
         st.markdown("📍 Nova Petrópolis / RS")
         st.markdown("🏢 CNPJ: 41.556.670/0001-76")
 
-    # Tabs principais
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
-        ["🏠 Dashboard", "🤖 Agentes", "📋 Tarefas", "🔧 Tools", "👥 Crews", "📱 WhatsApp", "📊 Execução"]
-    )
+    # Nova API de navegação do Streamlit 1.46.0+
+    pages = {
+        "🏠 Principal": [
+            st.Page(show_dashboard, title="Dashboard", icon="📊"),
+        ],
+        "🤖 Gerenciamento": [
+            st.Page(show_agents_tab, title="Agentes", icon="🤖"),
+            st.Page(show_tasks_tab, title="Tarefas", icon="📋"),
+            st.Page(show_tools_tab, title="Tools", icon="🔧"),
+            st.Page(show_crews_tab, title="Crews", icon="👥"),
+        ],
+        "📱 Integrações": [
+            st.Page(show_whatsapp_tab, title="WhatsApp", icon="📱"),
+        ],
+        "📊 Execução": [
+            st.Page(show_execution_tab, title="Execução", icon="📊"),
+        ]
+    }
 
-    with tab1:
-        show_dashboard()
-
-    with tab2:
-        show_agents_tab()
-
-    with tab3:
-        show_tasks_tab()
-
-    with tab4:
-        show_tools_tab()
-
-    with tab5:
-        show_crews_tab()
-
-    with tab6:
-        show_whatsapp_tab()
-
-    with tab7:
-        show_execution_tab()
+    # Usar st.navigation com posição no topo para melhor organização
+    current_page = st.navigation(pages, position="top", expanded=True)
+    
+    # Executar a página selecionada
+    current_page.run()
 
 
 if __name__ == "__main__":

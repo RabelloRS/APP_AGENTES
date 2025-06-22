@@ -3,11 +3,43 @@ Gerenciador de agentes para o sistema
 """
 
 import os
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 import yaml
 from crewai import Agent
-from langchain.tools import Tool
+from crewai.tools import BaseTool
+
+
+class CustomTool(BaseTool):
+    """Classe personalizada para tools compatível com CrewAI"""
+    
+    def __init__(self, name: str, description: str, func):
+        super().__init__(name=name, description=description)
+        self._func = func
+    
+    def _run(self, *args: Any, **kwargs: Any) -> Any:
+        """Executa a função da tool com os argumentos fornecidos"""
+        try:
+            # Se apenas um argumento foi passado e é uma string, tentar interpretar como JSON
+            if len(args) == 1 and isinstance(args[0], str):
+                try:
+                    import json
+                    parsed_args = json.loads(args[0])
+                    if isinstance(parsed_args, dict):
+                        # Se é um dicionário, usar como kwargs
+                        return self._func(**parsed_args)
+                    else:
+                        # Se é uma lista ou outro tipo, usar como args
+                        return self._func(*parsed_args)
+                except json.JSONDecodeError:
+                    # Se não é JSON válido, usar como argumento único
+                    return self._func(args[0])
+            
+            # Caso padrão: passar args e kwargs diretamente
+            return self._func(*args, **kwargs)
+            
+        except Exception as e:
+            return f"Erro ao executar tool {self.name}: {str(e)}"
 
 
 class AgentManager:
@@ -64,11 +96,11 @@ class AgentManager:
         default_config = {
             "researcher": {
                 "tools": [
+                    "simple_research_tool",
                     "read_excel_file",
                     "compare_text_similarity",
-                    "detect_data_patterns",
                 ],
-                "description": "Tools para pesquisa e análise de dados",
+                "description": "Tools para pesquisa e coleta de informações",
             },
             "analyst": {
                 "tools": [
@@ -118,39 +150,42 @@ class AgentManager:
         except Exception as e:
             print(f"Erro ao criar arquivo de configuração de tools dos agentes: {e}")
 
-    def _create_tool_objects(self, tool_names: List[str]) -> List[Tool]:
-        """Cria objetos Tool do LangChain a partir dos nomes das tools"""
+    def _create_tool_objects(self, tool_names: List[str]) -> List[BaseTool]:
+        """Cria objetos CustomTool compatíveis com CrewAI"""
+        print(f"🔧 Debug: Tentando criar {len(tool_names)} tool objects")
+        
         if not self.tools_manager:
-            print("ToolsManager não configurado. Retornando lista vazia de tools.")
+            print("❌ ToolsManager não configurado")
             return []
-
+        
         tools = []
         for tool_name in tool_names:
-            try:
-                # Obter a função da tool
-                tool_function = self.tools_manager.get_tool_function(tool_name)
-                if not tool_function:
-                    print(f"Função da tool '{tool_name}' não encontrada")
-                    continue
-
-                # Obter informações da tool
-                tool_info = self.tools_manager.get_tool_info(tool_name)
-                if not tool_info:
-                    print(f"Informações da tool '{tool_name}' não encontradas")
-                    continue
-
-                # Criar objeto Tool do LangChain
-                tool = Tool(
-                    name=tool_name,
-                    description=tool_info.get("description", f"Tool {tool_name}"),
-                    func=tool_function,
-                )
-                tools.append(tool)
-
-            except Exception as e:
-                print(f"Erro ao criar tool '{tool_name}': {e}")
+            print(f"🔧 Criando tool '{tool_name}'...")
+            
+            # Obter função da tool
+            tool_function = self.tools_manager.get_tool_function(tool_name)
+            if not tool_function:
+                print(f"❌ Função da tool '{tool_name}' não encontrada")
                 continue
-
+            
+            # Obter informações da tool
+            tool_info = self.tools_manager.get_tool_info(tool_name)
+            if not tool_info:
+                print(f"❌ Informações da tool '{tool_name}' não encontradas")
+                continue
+            
+            print(f"✅ Função e info da tool '{tool_name}' encontradas")
+            
+            # Criar objeto CustomTool
+            custom_tool = CustomTool(
+                name=tool_name,
+                description=tool_info.get("description", f"Tool {tool_name}"),
+                func=tool_function
+            )
+            tools.append(custom_tool)
+            print(f"✅ Tool '{tool_name}' criada com sucesso")
+        
+        print(f"✅ Total de {len(tools)} tools criadas com sucesso")
         return tools
 
     def reload_configs(self) -> bool:
@@ -167,17 +202,22 @@ class AgentManager:
         self, agent_type: str, tools: Optional[list] = None, **kwargs
     ) -> Optional[Agent]:
         """Cria um novo agente do tipo especificado"""
+        print(f"🔍 Debug: Tentando criar agente '{agent_type}'")
+        
         if agent_type not in self.available_agents:
-            print(f"Tipo de agente '{agent_type}' não encontrado nas configurações")
+            print(f"❌ Tipo de agente '{agent_type}' não encontrado nas configurações")
+            print(f"🔍 Agentes disponíveis: {list(self.available_agents.keys())}")
             return None
 
         agent_config = self.available_agents[agent_type].copy()
+        print(f"✅ Configuração do agente carregada: {agent_config.get('name', agent_type)}")
 
         # Sobrescrever configurações padrão com kwargs
         agent_config.update(kwargs)
 
         # Usar tools fornecidos ou da configuração
         if tools is not None:
+            print(f"🔧 Tools fornecidos explicitamente: {tools}")
             # Se tools fornecidos são strings, converter para objetos Tool
             if tools and isinstance(tools[0], str):
                 tool_objects = self._create_tool_objects(tools)
@@ -187,9 +227,13 @@ class AgentManager:
             # Usar tools configuradas para este agente
             agent_tools_config = self.agent_tools.get(agent_type, {})
             tool_names = agent_tools_config.get("tools", [])
+            print(f"🔧 Tools configuradas para '{agent_type}': {tool_names}")
             tool_objects = self._create_tool_objects(tool_names)
 
+        print(f"🔧 Tool objects criados: {len(tool_objects)} tools")
+
         try:
+            print(f"🔧 Criando objeto Agent com role: {agent_config['role']}")
             agent = Agent(
                 role=agent_config["role"],
                 goal=agent_config["goal"],
@@ -200,10 +244,13 @@ class AgentManager:
             )
 
             self.agents[agent_type] = agent
+            print(f"✅ Agente '{agent_type}' criado com sucesso!")
             return agent
 
         except Exception as e:
-            print(f"Erro ao criar agente {agent_type}: {e}")
+            print(f"❌ Erro ao criar agente {agent_type}: {e}")
+            import traceback
+            traceback.print_exc()
             return None
 
     def get_agent(self, agent_type: str) -> Optional[Agent]:

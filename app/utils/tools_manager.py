@@ -13,7 +13,8 @@ from app.utils.tools import (analyze_excel_similarity, compare_text_similarity,
                              generate_excel_report,
                              generate_similarity_recommendations,
                              read_excel_column, read_excel_file,
-                             validate_excel_file)
+                             validate_excel_file,
+                             simple_research_tool)
 
 
 class ToolsManager:
@@ -114,6 +115,14 @@ class ToolsManager:
                 "returns": "Dicionário com informações de validação",
                 "example": "validate_excel_file('dados.xlsx')",
             },
+            "simple_research_tool": {
+                "name": "Pesquisa Simples",
+                "description": "Realiza pesquisa sobre um tópico específico e retorna informações estruturadas",
+                "category": "Pesquisa",
+                "parameters": {"topic": "Tópico a ser pesquisado"},
+                "returns": "Informações estruturadas sobre o tópico",
+                "example": "simple_research_tool('projetos de fundação de pontes')",
+            },
         }
 
         try:
@@ -143,6 +152,7 @@ class ToolsManager:
             "detect_outliers": detect_outliers,
             "generate_excel_report": generate_excel_report,
             "validate_excel_file": validate_excel_file,
+            "simple_research_tool": simple_research_tool,
         }
 
     def reload_configs(self) -> bool:

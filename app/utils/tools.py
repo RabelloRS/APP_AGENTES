@@ -511,3 +511,95 @@ def organize_files_by_date(files_list: List[Dict[str, Any]], base_path: str) -> 
             "error": str(e),
             "files_list": files_list
         }
+
+
+def simple_research_tool(topic: str) -> str:
+    """Ferramenta simples de pesquisa que retorna informações sobre um tópico."""
+    research_data = {
+        "projetos de fundação de pontes": """
+        ### Projetos de Fundação de Pontes
+        
+        **Tipos de Fundações:**
+        1. **Fundações Rasas**: Sapatas e blocos para solos firmes
+        2. **Fundações Profundas**: Estacas e tubulões para solos instáveis
+        
+        **Considerações Técnicas:**
+        - Análise geotécnica do solo
+        - Cálculo de cargas estruturais
+        - Resistência à compressão
+        - Estabilidade contra forças laterais
+        
+        **Metodologias:**
+        - Ensaios de sondagem
+        - Análise de capacidade de carga
+        - Projeto estrutural detalhado
+        - Monitoramento durante execução
+        """,
+        
+        "inteligência artificial": """
+        ### Inteligência Artificial
+        
+        **Definição:**
+        IA é a simulação de inteligência humana em máquinas programadas para pensar e aprender.
+        
+        **Aplicações Principais:**
+        - Processamento de linguagem natural
+        - Visão computacional
+        - Sistemas de recomendação
+        - Automação industrial
+        
+        **Tecnologias:**
+        - Machine Learning
+        - Deep Learning
+        - Redes Neurais
+        - Algoritmos genéticos
+        """,
+        
+        "engenharia civil": """
+        ### Engenharia Civil
+        
+        **Áreas de Atuação:**
+        - Estruturas e fundações
+        - Transportes e vias
+        - Hidráulica e saneamento
+        - Construção civil
+        
+        **Princípios Fundamentais:**
+        - Segurança estrutural
+        - Sustentabilidade
+        - Eficiência econômica
+        - Impacto ambiental
+        
+        **Tecnologias Modernas:**
+        - BIM (Building Information Modeling)
+        - Materiais compósitos
+        - Automação na construção
+        - Energias renováveis
+        """
+    }
+    
+    # Buscar informações sobre o tópico
+    for key, content in research_data.items():
+        if topic.lower() in key.lower() or key.lower() in topic.lower():
+            return content
+    
+    # Se não encontrar, retornar resposta genérica
+    return f"""
+    ### Pesquisa sobre: {topic}
+    
+    **Informações Gerais:**
+    Este é um tópico interessante que merece investigação detalhada.
+    
+    **Sugestões de Pesquisa:**
+    - Consulte fontes especializadas
+    - Analise casos práticos
+    - Verifique normas técnicas aplicáveis
+    - Considere aspectos ambientais e sociais
+    
+    **Próximos Passos:**
+    Para obter informações mais específicas, recomenda-se:
+    1. Consulta a bases de dados técnicas
+    2. Análise de projetos similares
+    3. Entrevista com especialistas
+    4. Revisão de literatura técnica
+    """

@@ -3,11 +3,13 @@ Gerenciador de crews para o sistema
 """
 
 from typing import Dict, List, Optional
+from datetime import datetime
 
 from crewai import Crew, Task
 
 from app.agents.agent_manager import AgentManager
 from app.crews.task_manager import TaskManager
+from app.utils.database import DatabaseManager
 
 
 class CrewManager:
@@ -20,6 +22,7 @@ class CrewManager:
         self.task_manager = task_manager or TaskManager()
         self.crews: Dict[str, Crew] = {}
         self.crew_configs: Dict[str, Dict] = {}
+        self.db_manager = DatabaseManager()
 
     def create_crew(
         self, name: str, agent_types: List[str], description: str = ""
@@ -51,8 +54,11 @@ class CrewManager:
             self.crew_configs[name] = {
                 "description": description,
                 "agent_types": agent_types,
-                "created_at": "2024-01-01",  # Em produção, usar datetime.now()
+                "created_at": datetime.now().isoformat(),
             }
+            
+            # Salvar configuração no banco de dados
+            self.db_manager.save_crew_config(name, description, agent_types, [])
 
             return crew
 
@@ -134,21 +140,62 @@ class CrewManager:
             print(f"Erro ao executar tarefa na crew {crew_name}: {e}")
             return None
 
-    def execute_crew(self, crew_name: str) -> Optional[str]:
-        """Executa uma crew com suas tarefas pré-definidas"""
+    def execute_crew(self, crew_name: str, inputs: Optional[Dict] = None) -> Optional[str]:
+        """Executa uma crew com suas tarefas pré-definidas ou cria tarefas dinâmicas"""
         crew = self.get_crew(crew_name)
         if not crew:
             print(f"Crew {crew_name} não encontrada")
             return None
 
-        if not crew.tasks:
-            print(f"Crew {crew_name} não possui tarefas definidas")
-            return None
+        # Salvar execução no banco de dados
+        topic = inputs.get('topic', 'Execução sem tópico') if inputs else 'Execução sem tópico'
+        start_time = datetime.now()
+        execution_id = self.db_manager.save_execution(crew_name, topic, start_time)
 
         try:
+            # Se não há tarefas pré-definidas, criar uma tarefa dinâmica
+            if not crew.tasks:
+                print(f"Crew {crew_name} não possui tarefas definidas, criando tarefa dinâmica...")
+                
+                if not inputs or 'topic' not in inputs:
+                    print("Parâmetro 'topic' não fornecido para tarefa dinâmica")
+                    self.db_manager.update_execution_result(
+                        execution_id, "Erro: Tópico não fornecido", 
+                        datetime.now(), "0:00:00", "error", "Parâmetro 'topic' não fornecido"
+                    )
+                    return None
+                
+                # Criar tarefa dinâmica baseada no tópico
+                topic = inputs['topic']
+                task = Task(
+                    description=f"Execute a seguinte tarefa: {topic}",
+                    expected_output="Resultado detalhado da execução da tarefa",
+                    agent=crew.agents[0] if crew.agents else None,
+                )
+                crew.tasks = [task]
+            
+            # Executar crew
             result = crew.kickoff()
+            end_time = datetime.now()
+            duration = str(end_time - start_time).split('.')[0]
+            
+            # Salvar resultado no banco de dados
+            self.db_manager.update_execution_result(
+                execution_id, str(result), end_time, duration, "completed"
+            )
+            
             return str(result)
+            
         except Exception as e:
+            end_time = datetime.now()
+            duration = str(end_time - start_time).split('.')[0]
+            error_msg = str(e)
+            
+            # Salvar erro no banco de dados
+            self.db_manager.update_execution_result(
+                execution_id, "", end_time, duration, "error", error_msg
+            )
+            
             print(f"Erro ao executar crew {crew_name}: {e}")
             return None
 
@@ -165,10 +212,12 @@ class CrewManager:
         return self.crew_configs.get(name)
 
     def delete_crew(self, name: str) -> bool:
-        """Remove uma crew"""
+        """Remove uma crew (mantém o histórico no banco de dados)"""
         if name in self.crews:
             del self.crews[name]
             del self.crew_configs[name]
+            # Não deletar do banco de dados para manter histórico
+            # self.db_manager.delete_crew_config(name)
             return True
         return False
 
