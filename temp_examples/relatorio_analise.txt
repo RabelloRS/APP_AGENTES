@@ -1,0 +1,49 @@
+
+# Relatório de Análise de Planilhas
+**Data:** 21/06/2025 23:10:53
+
+## 📊 Informações dos Arquivos
+
+### Arquivo 1
+- **Arquivo:** temp_examples\materiais_antigos.xlsx
+- **Coluna:** Material
+- **Total de itens:** 10
+
+### Arquivo 2
+- **Arquivo:** temp_examples\materiais_novos.xlsx
+- **Coluna:** Material
+- **Total de itens:** 12
+
+## 📈 Análise de Similaridade
+
+### Estatísticas Gerais
+- **Score médio:** 100.00%
+- **Score mediano:** 100.00%
+- **Score máximo:** 100.00%
+- **Score mínimo:** 100.00%
+
+### Distribuição de Similaridade
+- **Alta similaridade (≥80%):** 10 itens
+- **Similaridade média (50-79%):** 0 itens
+- **Baixa similaridade (<50%):** 0 itens
+
+## 💡 Recomendações
+
+- ✅ Alta similaridade geral - os dados são muito similares
+- ✅ Mais de 80% dos itens têm alta similaridade
+
+## 🔍 Detalhes das Correspondências
+
+### Top 5 Melhores Correspondências:
+1. **'Cimento Portland CP-II'** → **'Cimento Portland CP-II'** (Score: 100.0%)
+2. **'Areia Média'** → **'Areia Média'** (Score: 100.0%)
+3. **'Brita 1'** → **'Brita 1'** (Score: 100.0%)
+4. **'Aço CA-50'** → **'Aço CA-50'** (Score: 100.0%)
+5. **'Tijolo Cerâmico'** → **'Tijolo Cerâmico'** (Score: 100.0%)
+
+### Top 5 Piores Correspondências:
+1. **'Argamassa'** → **'Argamassa'** (Score: 100.0%)
+2. **'Tinta Acrílica'** → **'Tinta Acrílica'** (Score: 100.0%)
+3. **'Telha Cerâmica'** → **'Telha Cerâmica'** (Score: 100.0%)
+4. **'Viga Pré-moldada'** → **'Viga Pré-moldada'** (Score: 100.0%)
+5. **'Bloco de Concreto'** → **'Bloco de Concreto'** (Score: 100.0%)
