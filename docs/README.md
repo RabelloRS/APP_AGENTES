@@ -1,88 +1,160 @@
-# Documentação do APP_AGENTES
+# APP_AGENTES - Sistema de Agentes Inteligentes
 
-## Visão Geral
+## 🎯 MVP - Produto Mínimo Viável
 
-O APP_AGENTES é um sistema de agentes inteligentes construído com CrewAI e Streamlit. O sistema permite criar, gerenciar e executar tarefas complexas através de múltiplos agentes especializados que trabalham em conjunto.
+O **APP_AGENTES** é um sistema de agentes inteligentes baseado em CrewAI, focado inicialmente na **análise e comparação de planilhas Excel** para aplicações em engenharia civil.
 
-## Arquitetura
+### 🚀 Funcionalidades do MVP
 
-### Componentes Principais
+#### 📊 Análise de Planilhas Excel
+- **Comparação de similaridade** entre colunas de diferentes planilhas
+- **Detecção de padrões** nos dados (textuais e numéricos)
+- **Validação automática** de arquivos Excel
+- **Geração de relatórios** estruturados
+- **Recomendações inteligentes** baseadas na análise
 
-1. **AgentManager**: Gerencia a criação e configuração de agentes
-2. **CrewManager**: Gerencia crews (equipes) de agentes
-3. **Config**: Gerencia configurações do sistema
-4. **Streamlit Interface**: Interface web para interação com o sistema
+#### 🎯 Casos de Uso Principais
+1. **Comparação de orçamentos** de diferentes fornecedores
+2. **Análise de variações** em projetos de engenharia
+3. **Controle de qualidade** de dados em planilhas
+4. **Detecção de inconsistências** entre versões de documentos
 
-### Estrutura de Agentes
+### 🛠️ Tecnologias Utilizadas
 
-O sistema inclui os seguintes tipos de agentes:
+| Componente | Tecnologia | Status |
+|------------|------------|--------|
+| **Framework de Agentes** | CrewAI | ✅ Implementado |
+| **Interface Gráfica** | Streamlit | ✅ Implementado |
+| **Processamento de Dados** | Pandas + NumPy | ✅ Implementado |
+| **Análise de Similaridade** | TheFuzz + Scikit-learn | ✅ Implementado |
+| **Modelo de Linguagem** | OpenAI GPT-4 | ✅ Configurado |
+| **Manipulação de Excel** | OpenPyXL | ✅ Implementado |
 
-- **Pesquisador**: Realiza pesquisas e coleta informações
-- **Analista**: Analisa dados e gera insights
-- **Escritor**: Cria conteúdo e relatórios
-- **Revisor**: Revisa e valida conteúdo
-- **Coordenador**: Coordena tarefas entre agentes
+### 📋 Pré-requisitos
 
-## Configuração
+- Python 3.8+
+- Chave da API OpenAI configurada
+- Dependências listadas em `requirements.txt`
 
-### Variáveis de Ambiente
+### 🚀 Instalação e Configuração
 
-Crie um arquivo `.env` com as seguintes variáveis:
-
-```env
-OPENAI_API_KEY=sua_chave_aqui
-ANTHROPIC_API_KEY=sua_chave_aqui
-DEFAULT_MODEL=gpt-4
-DEFAULT_TEMPERATURE=0.7
-DEBUG=True
-LOG_LEVEL=INFO
+1. **Clone o repositório:**
+```bash
+git clone <repository-url>
+cd APP_AGENTES
 ```
 
-## Uso
+2. **Configure o ambiente virtual:**
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou
+venv\Scripts\activate     # Windows
+```
 
-### Executando a Aplicação
+3. **Instale as dependências:**
+```bash
+pip install -r requirements.txt
+```
 
+4. **Configure as variáveis de ambiente:**
+```bash
+cp env.example .env
+# Edite o arquivo .env e adicione sua chave da API OpenAI
+```
+
+5. **Execute o sistema:**
 ```bash
 streamlit run app/main.py
 ```
 
-### Criando Agentes
+### 📖 Como Usar o MVP
 
-```python
-from app.agents.agent_manager import AgentManager
+#### 1. Acesse a Interface
+- Abra o navegador em `http://localhost:8501`
+- Verifique se a API está configurada na sidebar
 
-agent_manager = AgentManager()
-researcher = agent_manager.create_agent("researcher")
-```
+#### 2. Execute uma Análise de Planilhas
+1. Vá para a aba **"Execução"**
+2. Selecione **"Crew de Análise de Planilhas"**
+3. Faça upload de dois arquivos Excel
+4. Selecione as colunas para comparação
+5. Configure as opções de análise:
+   - ✅ Detectar padrões nos dados
+   - ✅ Gerar recomendações
+   - ✅ Relatório detalhado
+6. Clique em **"Executar Tarefa"**
 
-### Criando Crews
+#### 3. Analise os Resultados
+- **Métricas principais**: Score médio, distribuição de similaridade
+- **Recomendações**: Sugestões baseadas na análise
+- **Padrões detectados**: Análise da estrutura dos dados
+- **Relatório detalhado**: Download do relatório completo
+- **Correspondências**: Tabela com scores de similaridade
 
-```python
-from app.crews.crew_manager import CrewManager
+### 🔧 Exemplo Prático
 
-crew_manager = CrewManager(agent_manager)
-crew = crew_manager.create_crew("Minha Crew", ["researcher", "analyst"])
-```
-
-## Desenvolvimento
-
-### Executando Testes
+Execute o exemplo incluído para ver o sistema em ação:
 
 ```bash
-pytest tests/
+python examples/excel_comparison_example.py
 ```
 
-### Formatação de Código
+Este exemplo cria planilhas de materiais de construção e demonstra:
+- Validação de arquivos
+- Análise de similaridade
+- Detecção de padrões
+- Geração de relatórios
 
-```bash
-black .
-flake8 .
+### 📊 Estrutura do Projeto
+
+```
+APP_AGENTES/
+├── app/
+│   ├── agents/          # Gerenciamento de agentes
+│   ├── crews/           # Gerenciamento de equipes
+│   ├── config/          # Configurações YAML
+│   ├── utils/           # Ferramentas e utilitários
+│   └── main.py          # Interface Streamlit
+├── examples/            # Exemplos práticos
+├── docs/               # Documentação
+├── tests/              # Testes automatizados
+└── requirements.txt    # Dependências
 ```
 
-## Contribuição
+### 🎯 Roadmap - Próximas Fases
+
+#### Fase 2: Expansão de Funcionalidades
+- [ ] Integração com normas técnicas (RAG)
+- [ ] Análise de imagens de patologias
+- [ ] Agente especialista em normas
+- [ ] Sistema de busca em documentos
+
+#### Fase 3: Automação Avançada
+- [ ] Criação dinâmica de agentes
+- [ ] Integração com APIs externas
+- [ ] Sistema de workflow personalizado
+- [ ] Dashboard avançado
+
+### 🤝 Contribuição
 
 1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request 
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+### 📝 Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+### 📞 Suporte
+
+Para dúvidas ou suporte:
+- Abra uma issue no GitHub
+- Consulte a documentação em `docs/`
+- Execute os exemplos em `examples/`
+
+---
+
+**Desenvolvido com ❤️ para a comunidade de engenharia civil** 

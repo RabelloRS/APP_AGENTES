@@ -1,0 +1,35 @@
+research_task:
+  description: "Realizar pesquisa detalhada sobre {topic}"
+  expected_output: "Relatório completo com informações coletadas, fontes e dados relevantes"
+  agent: "researcher"
+  context: "Pesquisa inicial para coleta de informações"
+
+analysis_task:
+  description: "Analisar dados coletados sobre {topic} e gerar insights"
+  expected_output: "Análise estruturada com insights, tendências e recomendações"
+  agent: "analyst"
+  context: "Análise dos dados pesquisados"
+
+writing_task:
+  description: "Criar conteúdo baseado na pesquisa e análise sobre {topic}"
+  expected_output: "Conteúdo bem estruturado, claro e informativo"
+  agent: "writer"
+  context: "Criação de conteúdo baseado em dados"
+
+review_task:
+  description: "Revisar e validar o conteúdo criado sobre {topic}"
+  expected_output: "Conteúdo revisado e validado com sugestões de melhoria"
+  agent: "reviewer"
+  context: "Revisão de qualidade do conteúdo"
+
+coordination_task:
+  description: "Coordenar o fluxo de trabalho entre os agentes para {topic}"
+  expected_output: "Plano de execução coordenado e cronograma de entregas"
+  agent: "coordinator"
+  context: "Coordenação geral do projeto"
+
+excel_analysis_task:
+  description: "Analisar dados de planilhas Excel relacionadas a {topic}"
+  expected_output: "Relatório de análise de dados com comparações e insights"
+  agent: "excel_analyst"
+  context: "Análise específica de dados em planilhas" 
