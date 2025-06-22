@@ -5,7 +5,8 @@ Aplicação principal do sistema de agentes inteligentes
 import sys
 import os
 from pathlib import Path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -30,9 +31,9 @@ def main():
     """Função principal da aplicação"""
 
     # Inicializar gerenciadores no session_state se não existirem
-    if 'agent_manager' not in st.session_state:
+    if "agent_manager" not in st.session_state:
         st.session_state.agent_manager = AgentManager()
-    if 'crew_manager' not in st.session_state:
+    if "crew_manager" not in st.session_state:
         st.session_state.crew_manager = CrewManager(st.session_state.agent_manager)
 
     # Header
@@ -122,14 +123,15 @@ def show_agents_tab():
         info = manager.get_agent_info(agent_type) or {}
         name = info.get("name", agent_type)
         role = info.get("role", "-")
+        tools = ", ".join(manager.get_agent_tools(agent_type))
         with st.expander(f"🤖 {name}"):
             st.write(f"**Função:** {role}")
+            if tools:
+                st.write(f"**Ferramentas:** {tools}")
 
             col1, col2 = st.columns(2)
             with col1:
-                if st.button(
-                    f"Configurar {name}", key=f"config_{agent_type}"
-                ):
+                if st.button(f"Configurar {name}", key=f"config_{agent_type}"):
                     if not manager.get_agent(agent_type):
                         manager.create_agent(agent_type)
                     st.success(f"Agente {name} criado!")
@@ -149,15 +151,30 @@ def show_crews_tab():
     crew_name = st.text_input("Nome da Crew")
     crew_description = st.text_area("Descrição")
 
-    # Seleção de agentes dinâmicos
     manager = st.session_state.agent_manager
+    crew_manager = st.session_state.crew_manager
+    templates = ["Personalizado"] + crew_manager.list_templates()
+    template_choice = st.selectbox("Template de Crew", templates)
+    template_agents = []
+    workflow_choice = None
+    if template_choice != "Personalizado":
+        template = crew_manager.get_template(template_choice) or {}
+        template_agents = template.get("agent_types", [])
+        workflow_choice = template.get("workflow")
+        st.info(template.get("description", ""))
+
     available_agents = manager.list_available_agent_types()
-    selected_agents = st.multiselect("Selecionar Agentes", available_agents)
+    selected_agents = st.multiselect(
+        "Selecionar Agentes", available_agents, default=template_agents
+    )
 
     if st.button("Criar Crew"):
         if crew_name and selected_agents:
             crew = st.session_state.crew_manager.create_crew(
-                crew_name, selected_agents, crew_description
+                crew_name,
+                selected_agents,
+                crew_description,
+                workflow=workflow_choice,
             )
             if crew:
                 st.success(f"Crew '{crew_name}' criada com sucesso!")
@@ -165,12 +182,6 @@ def show_crews_tab():
                 st.error("Erro ao criar a crew")
         else:
             st.error("Preencha o nome da crew e selecione pelo menos um agente")
-
-    if st.button("Criar Crew de Análise de Planilhas"):
-        st.session_state.crew_manager.create_crew(
-            "Crew de Análise de Planilhas", ["excel_analyst"], "Comparar planilhas"
-        )
-        st.success("Crew de Análise de Planilhas criada")
 
     st.markdown("---")
 
@@ -181,8 +192,11 @@ def show_crews_tab():
 
     for name, crew in existing_crews.items():
         agents_names = [agent.role for agent in crew.agents]
+        workflow = st.session_state.crew_manager.get_crew_info(name).get("workflow")
         with st.expander(f"👥 {name}"):
             st.write(f"**Agentes:** {', '.join(agents_names)}")
+            if workflow:
+                st.write(f"**Workflow:** {workflow}")
 
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -226,21 +240,29 @@ def show_execution_tab():
     col1, col2 = st.columns(2)
 
     with col1:
-        max_iterations = st.number_input("Máximo de Iterações", min_value=1, max_value=10, value=3)
+        max_iterations = st.number_input(
+            "Máximo de Iterações", min_value=1, max_value=10, value=3
+        )
 
     with col2:
         verbose = st.checkbox("Modo Verbose", value=True)
 
     # Botão de execução
     if st.button("🚀 Executar Tarefa", type="primary"):
-        if selected_crew == "Crew de Análise de Planilhas":
+        crew_info = crew_manager.get_crew_info(selected_crew)
+        workflow = crew_info.get("workflow") if crew_info else None
+        if workflow == "planilhas":
             if file1 and file2 and column1 and column2:
                 with st.spinner(f"Executando tarefa com a '{selected_crew}'..."):
                     tmp1 = Path("/tmp/file1.xlsx")
                     tmp1.write_bytes(file1.getbuffer())
                     tmp2 = Path("/tmp/file2.xlsx")
                     tmp2.write_bytes(file2.getbuffer())
-                    from app.utils.tools import read_excel_column, compare_text_similarity
+                    from app.utils.tools import (
+                        read_excel_column,
+                        compare_text_similarity,
+                    )
+
                     list1 = read_excel_column(str(tmp1), column1)
                     list2 = read_excel_column(str(tmp2), column2)
                     result = compare_text_similarity(list1, list2)
@@ -249,10 +271,24 @@ def show_execution_tab():
                 st.json(result)
             else:
                 st.error("Envie os arquivos e informe as colunas para comparação")
+        elif workflow:
+            steps = crew_manager.workflows.get(workflow, [])
+            progress = st.progress(0)
+            outputs = []
+            for i, step in enumerate(steps):
+                with st.spinner(f"{step}..."):
+                    result = crew_manager.execute_crew_task(selected_crew, step)
+                    outputs.append(result)
+                progress.progress((i + 1) / len(steps))
+            st.success("✅ Workflow executado")
+            for step, out in zip(steps, outputs):
+                st.write(f"**{step}:** {out}")
         else:
             if task_description:
                 with st.spinner(f"Executando tarefa com a '{selected_crew}'..."):
-                    result = crew_manager.execute_crew_task(selected_crew, task_description)
+                    result = crew_manager.execute_crew_task(
+                        selected_crew, task_description
+                    )
                 st.success("✅ Tarefa executada com sucesso!")
                 st.subheader("📋 Resultados")
                 st.text_area("Resultado da Execução", value=result, height=300)
@@ -265,14 +301,31 @@ def show_execution_tab():
     st.subheader("📜 Histórico de Execuções")
 
     executions = [
-        {"task": "Pesquisar sobre IA", "crew": "Crew de Pesquisa", "status": "Concluída", "time": "2.3s"},
-        {"task": "Criar relatório", "crew": "Crew de Conteúdo", "status": "Concluída", "time": "1.8s"},
-        {"task": "Analisar dados", "crew": "Crew de Pesquisa", "status": "Em andamento", "time": "5.2s"},
+        {
+            "task": "Pesquisar sobre IA",
+            "crew": "Crew de Pesquisa",
+            "status": "Concluída",
+            "time": "2.3s",
+        },
+        {
+            "task": "Criar relatório",
+            "crew": "Crew de Conteúdo",
+            "status": "Concluída",
+            "time": "1.8s",
+        },
+        {
+            "task": "Analisar dados",
+            "crew": "Crew de Pesquisa",
+            "status": "Em andamento",
+            "time": "5.2s",
+        },
     ]
 
     for execution in executions:
         status_color = "🟢" if execution["status"] == "Concluída" else "🟡"
-        st.write(f"{status_color} **{execution['task']}** - {execution['crew']} ({execution['time']})")
+        st.write(
+            f"{status_color} **{execution['task']}** - {execution['crew']} ({execution['time']})"
+        )
 
 
 if __name__ == "__main__":
