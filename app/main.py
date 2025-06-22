@@ -3,6 +3,7 @@ Aplicação principal do sistema de agentes inteligentes
 """
 
 import os
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -772,9 +773,6 @@ def show_excel_upload_interface():
         file1 = st.file_uploader("Arquivo Excel 1", type=["xlsx", "xls"], key="excel1")
         if file1:
             # Validar arquivo 1
-            import os
-            import tempfile
-
             from app.utils.tools import validate_excel_file
 
             with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp_file:
@@ -860,9 +858,6 @@ def execute_excel_analysis(
     with st.spinner("Executando análise de planilhas..."):
         try:
             # Salvar arquivos temporariamente
-            import os
-            import tempfile
-
             with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp1:
                 tmp1.write(file1.getbuffer())
                 tmp1_path = tmp1.name
