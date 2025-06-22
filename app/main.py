@@ -100,8 +100,8 @@ def main():
         st.markdown("🏢 CNPJ: 41.556.670/0001-76")
 
     # Tabs principais
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-        ["🏠 Dashboard", "🤖 Agentes", "📋 Tarefas", "🔧 Tools", "👥 Crews", "📊 Execução"]
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
+        ["🏠 Dashboard", "🤖 Agentes", "📋 Tarefas", "🔧 Tools", "👥 Crews", "📱 WhatsApp", "📊 Execução"]
     )
 
     with tab1:
@@ -120,6 +120,9 @@ def main():
         show_crews_tab()
 
     with tab6:
+        show_whatsapp_tab()
+
+    with tab7:
         show_execution_tab()
 
 
@@ -935,6 +938,220 @@ def execute_excel_analysis(
 
         except Exception as e:
             st.error(f"❌ Erro durante a análise: {str(e)}")
+
+
+def show_whatsapp_tab():
+    """Exibe a aba de WhatsApp para download de arquivos"""
+    st.header("📱 WhatsApp - Download de Arquivos")
+    st.markdown("### Sistema de Monitoramento e Download Automático de Arquivos")
+    
+    # Configurações do WhatsApp
+    st.subheader("⚙️ Configurações")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        group_name = st.text_input(
+            "Nome do Grupo do WhatsApp",
+            placeholder="Ex: Grupo de Trabalho",
+            help="Nome exato do grupo que será monitorado"
+        )
+        
+        session_name = st.text_input(
+            "Nome da Sessão",
+            value="whatsapp_session",
+            help="Nome para identificar esta sessão do WhatsApp"
+        )
+    
+    with col2:
+        download_path = st.text_input(
+            "Pasta de Download",
+            value="./downloads/whatsapp",
+            help="Pasta onde os arquivos serão salvos"
+        )
+        
+        max_messages = st.number_input(
+            "Máximo de Mensagens",
+            min_value=10,
+            max_value=1000,
+            value=100,
+            help="Número máximo de mensagens a processar"
+        )
+    
+    # Status da conexão
+    st.subheader("🔗 Status da Conexão")
+    
+    if "whatsapp_status" not in st.session_state:
+        st.session_state.whatsapp_status = "disconnected"
+    
+    status_col1, status_col2 = st.columns([1, 3])
+    
+    with status_col1:
+        if st.session_state.whatsapp_status == "connected":
+            st.success("✅ Conectado")
+        elif st.session_state.whatsapp_status == "connecting":
+            st.warning("🔄 Conectando...")
+        else:
+            st.error("❌ Desconectado")
+    
+    with status_col2:
+        if st.button("🔗 Conectar ao WhatsApp", disabled=st.session_state.whatsapp_status == "connecting"):
+            st.session_state.whatsapp_status = "connecting"
+            
+            # Simular conexão
+            from app.utils.tools import whatsapp_connect
+            result = whatsapp_connect(session_name)
+            
+            if result["status"] == "connected":
+                st.session_state.whatsapp_status = "connected"
+                st.success("WhatsApp conectado com sucesso!")
+            else:
+                st.session_state.whatsapp_status = "disconnected"
+                st.error(f"Erro na conexão: {result.get('error', 'Erro desconhecido')}")
+    
+    # Monitoramento e Download
+    st.subheader("📥 Monitoramento e Download")
+    
+    if st.session_state.whatsapp_status == "connected":
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("🔍 Monitorar Mensagens", type="primary"):
+                if group_name:
+                    with st.spinner("Monitorando mensagens..."):
+                        from app.utils.tools import whatsapp_get_messages, extract_cloud_links
+                        
+                        # Obter mensagens
+                        messages = whatsapp_get_messages(group_name, int(max_messages))
+                        
+                        # Extrair links de nuvem
+                        cloud_links = extract_cloud_links(messages)
+                        
+                        # Salvar no session state
+                        st.session_state.whatsapp_messages = messages
+                        st.session_state.cloud_links = cloud_links
+                        
+                        st.success(f"✅ {len(messages)} mensagens processadas")
+                        st.info(f"🔗 {len(cloud_links)} links de nuvem encontrados")
+                else:
+                    st.error("Por favor, informe o nome do grupo")
+        
+        with col2:
+            if st.button("⬇️ Baixar Arquivos", type="primary"):
+                if "cloud_links" in st.session_state and st.session_state.cloud_links:
+                    with st.spinner("Baixando arquivos..."):
+                        from app.utils.tools import download_cloud_file, download_whatsapp_file, rename_file_with_timestamp
+                        
+                        downloaded_files = []
+                        
+                        # Baixar arquivos da nuvem
+                        for link_info in st.session_state.cloud_links:
+                            result = download_cloud_file(link_info["url"], download_path)
+                            if result["status"] == "success":
+                                # Renomear com timestamp
+                                new_path = rename_file_with_timestamp(
+                                    result["file_path"], 
+                                    link_info["timestamp"]
+                                )
+                                downloaded_files.append({
+                                    "original_path": result["file_path"],
+                                    "new_path": new_path,
+                                    "source": "cloud",
+                                    "service": link_info["service"]
+                                })
+                        
+                        # Baixar arquivos do WhatsApp
+                        if "whatsapp_messages" in st.session_state:
+                            for message in st.session_state.whatsapp_messages:
+                                if message.get("has_file"):
+                                    result = download_whatsapp_file(message, download_path)
+                                    if result["status"] == "success":
+                                        # Renomear com timestamp
+                                        new_path = rename_file_with_timestamp(
+                                            result["file_path"], 
+                                            message["timestamp"]
+                                        )
+                                        downloaded_files.append({
+                                            "original_path": result["file_path"],
+                                            "new_path": new_path,
+                                            "source": "whatsapp",
+                                            "service": "whatsapp"
+                                        })
+                        
+                        st.session_state.downloaded_files = downloaded_files
+                        st.success(f"✅ {len(downloaded_files)} arquivos baixados")
+                else:
+                    st.error("Nenhum link encontrado. Execute o monitoramento primeiro.")
+    
+    # Resultados
+    if "whatsapp_messages" in st.session_state or "cloud_links" in st.session_state:
+        st.subheader("📊 Resultados")
+        
+        # Mensagens encontradas
+        if "whatsapp_messages" in st.session_state:
+            with st.expander(f"📨 Mensagens Encontradas ({len(st.session_state.whatsapp_messages)})"):
+                for i, msg in enumerate(st.session_state.whatsapp_messages[:10]):  # Mostrar apenas 10
+                    st.write(f"**{i+1}.** {msg['sender']} - {msg['text'][:50]}...")
+                    if msg.get("has_file"):
+                        st.write(f"   📎 Arquivo: {msg.get('file_name', 'N/A')}")
+        
+        # Links de nuvem encontrados
+        if "cloud_links" in st.session_state and st.session_state.cloud_links:
+            with st.expander(f"🔗 Links de Nuvem ({len(st.session_state.cloud_links)})"):
+                for i, link in enumerate(st.session_state.cloud_links):
+                    st.write(f"**{i+1}.** {link['service'].upper()} - {link['sender']}")
+                    st.write(f"   📅 {link['timestamp']}")
+                    st.write(f"   🔗 {link['url'][:50]}...")
+        
+        # Arquivos baixados
+        if "downloaded_files" in st.session_state and st.session_state.downloaded_files:
+            with st.expander(f"📁 Arquivos Baixados ({len(st.session_state.downloaded_files)})"):
+                for i, file_info in enumerate(st.session_state.downloaded_files):
+                    st.write(f"**{i+1}.** {Path(file_info['new_path']).name}")
+                    st.write(f"   📂 {file_info['new_path']}")
+                    st.write(f"   📊 {file_info['source']} - {file_info['service']}")
+    
+    # Organização de arquivos
+    if "downloaded_files" in st.session_state and st.session_state.downloaded_files:
+        st.subheader("📂 Organização de Arquivos")
+        
+        if st.button("🗂️ Organizar por Data"):
+            with st.spinner("Organizando arquivos..."):
+                from app.utils.tools import organize_files_by_date
+                
+                result = organize_files_by_date(st.session_state.downloaded_files, download_path)
+                
+                if result["status"] == "success":
+                    st.success("✅ Arquivos organizados por data!")
+                    st.info(f"📁 {len(result['organized_files'])} arquivos movidos")
+                else:
+                    st.error(f"❌ Erro na organização: {result.get('error', 'Erro desconhecido')}")
+    
+    # Informações importantes
+    st.markdown("---")
+    st.subheader("ℹ️ Informações Importantes")
+    
+    st.info("""
+    **Como usar:**
+    1. Configure o nome do grupo do WhatsApp
+    2. Clique em "Conectar ao WhatsApp"
+    3. Execute o monitoramento para encontrar mensagens com arquivos
+    4. Baixe os arquivos encontrados
+    5. Organize os arquivos por data se desejar
+    
+    **Serviços suportados:**
+    - Google Drive
+    - OneDrive
+    - Dropbox
+    - MEGA
+    - MediaFire
+    - Arquivos anexados diretamente no WhatsApp
+    
+    **Observações:**
+    - Os arquivos são renomeados automaticamente com timestamp
+    - A organização por data cria pastas separadas
+    - Esta é uma versão de demonstração (simulação)
+    """)
 
 
 def show_execution_tab():

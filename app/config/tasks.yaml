@@ -32,4 +32,22 @@ excel_analysis_task:
   description: "Analisar dados de planilhas Excel relacionadas a {topic}"
   expected_output: "Relatório de análise de dados com comparações e insights"
   agent: "excel_analyst"
-  context: ["Análise específica de dados em planilhas"] 
+  context: ["Análise específica de dados em planilhas"]
+
+whatsapp_monitoring_task:
+  description: "Monitorar grupo do WhatsApp '{group_name}' em busca de mensagens com arquivos e links de serviços em nuvem"
+  expected_output: "Lista de mensagens encontradas com arquivos e links identificados, incluindo timestamps"
+  agent: "whatsapp_monitor"
+  context: ["Monitoramento contínuo do grupo do WhatsApp"]
+
+file_download_task:
+  description: "Baixar arquivos identificados das mensagens do WhatsApp e links de serviços em nuvem"
+  expected_output: "Arquivos baixados com sucesso e relatório de downloads realizados"
+  agent: "file_downloader"
+  context: ["Download de arquivos de múltiplas fontes"]
+
+file_organization_task:
+  description: "Organizar arquivos baixados, adicionar timestamps aos nomes e criar estrutura de pastas organizada"
+  expected_output: "Arquivos organizados com nomes padronizados incluindo data e hora, estrutura de pastas criada"
+  agent: "file_organizer"
+  context: ["Organização e padronização de arquivos"] 

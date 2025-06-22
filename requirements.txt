@@ -29,3 +29,8 @@ openpyxl==3.1.2
 # Updated dependencies to fix deprecation warnings
 pydantic>=2.5.0
 docstring-parser>=0.15.0
+
+# WhatsApp and web automation dependencies
+selenium==4.15.2
+webdriver-manager==4.0.1
+python-whatsapp-sdk==0.1.0

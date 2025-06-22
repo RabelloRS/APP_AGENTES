@@ -67,3 +67,64 @@ validate_excel_file:
     file_path: Caminho do arquivo Excel
   returns: Dicionário com informações de validação
   example: validate_excel_file('dados.xlsx')
+whatsapp_connect:
+  name: Conectar ao WhatsApp
+  description: Estabelece conexão com o WhatsApp Web para monitoramento de grupos
+  category: WhatsApp
+  parameters:
+    session_name: Nome da sessão do WhatsApp
+  returns: Status da conexão
+  example: whatsapp_connect('minha_sessao')
+whatsapp_get_messages:
+  name: Obter Mensagens do WhatsApp
+  description: Obtém mensagens de um grupo específico do WhatsApp
+  category: WhatsApp
+  parameters:
+    group_name: Nome do grupo do WhatsApp
+    limit: Número máximo de mensagens a obter
+  returns: Lista de mensagens com metadados
+  example: whatsapp_get_messages('Grupo de Trabalho', 100)
+extract_cloud_links:
+  name: Extrair Links de Nuvem
+  description: Extrai links de serviços em nuvem (Google Drive, OneDrive, Dropbox) de mensagens
+  category: WhatsApp
+  parameters:
+    messages: Lista de mensagens do WhatsApp
+  returns: Lista de links de serviços em nuvem encontrados
+  example: extract_cloud_links(mensagens_grupo)
+download_cloud_file:
+  name: Baixar Arquivo da Nuvem
+  description: Baixa arquivo de serviços em nuvem (Google Drive, OneDrive, Dropbox)
+  category: Download
+  parameters:
+    cloud_link: Link do arquivo na nuvem
+    output_path: Caminho onde salvar o arquivo
+  returns: Status do download e caminho do arquivo
+  example: download_cloud_file('https://drive.google.com/file/d/123', './downloads/')
+download_whatsapp_file:
+  name: Baixar Arquivo do WhatsApp
+  description: Baixa arquivo anexado a uma mensagem do WhatsApp
+  category: Download
+  parameters:
+    message: Mensagem do WhatsApp com arquivo
+    output_path: Caminho onde salvar o arquivo
+  returns: Status do download e caminho do arquivo
+  example: download_whatsapp_file(mensagem_com_arquivo, './downloads/')
+rename_file_with_timestamp:
+  name: Renomear Arquivo com Timestamp
+  description: Adiciona timestamp (data e hora) ao nome do arquivo
+  category: Organização
+  parameters:
+    file_path: Caminho do arquivo original
+    timestamp: Timestamp da mensagem (datetime)
+  returns: Caminho do arquivo renomeado
+  example: rename_file_with_timestamp('./arquivo.pdf', '2024-01-15 14:30:00')
+organize_files_by_date:
+  name: Organizar Arquivos por Data
+  description: Organiza arquivos em pastas por data de download
+  category: Organização
+  parameters:
+    files_list: Lista de arquivos baixados
+    base_path: Caminho base para organização
+  returns: Estrutura de pastas criada
+  example: organize_files_by_date(arquivos_baixados, './downloads/')
